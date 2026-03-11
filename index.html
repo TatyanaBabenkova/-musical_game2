@@ -72,8 +72,8 @@
 
         /* Карусель пресетов */
         .presets-carousel {
-            display: flex; overflow-x: auto; gap: 8px; padding-bottom: 10px;
-            scrollbar-width: none; margin-bottom: 5px; flex: 0 0 auto;
+            display: flex; overflow-x: auto; gap: 8px; padding-bottom: 8px;
+            scrollbar-width: none; margin-bottom: 2px; flex: 0 0 auto;
         }
         .presets-carousel::-webkit-scrollbar { display: none; }
         .preset-btn {
@@ -84,7 +84,7 @@
         .preset-btn:active { background: #e2e8f0; }
 
         /* Верхняя панель */
-        .top-controls { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 10px; align-items: stretch; flex: 0 0 auto;}
+        .top-controls { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 8px; align-items: stretch; flex: 0 0 auto;}
         .btn-play { background: #10b981; color: white; flex: 1; padding: 12px; border-radius: 18px; font-size: 16px; font-weight: 900; border: none; box-shadow: 0 6px 15px rgba(16, 185, 129, 0.4); transition: 0.2s;}
         .btn-play.playing { background: #ef4444; box-shadow: 0 6px 15px rgba(239, 68, 68, 0.4); }
         .btn-icon { width: 48px; background: #e2e8f0; border: none; border-radius: 18px; font-size: 20px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s;}
@@ -100,14 +100,14 @@
         .settings-menu label { font-size: 12px; font-weight: bold; color: #64748b; }
         .settings-menu select { padding: 8px; border-radius: 8px; border: 1px solid #cbd5e1; font-weight: bold; font-family: inherit;}
 
-        /* ИГРОВАЯ СЕТКА (ИСПРАВЛЕНА!) */
+        /* ИГРОВАЯ СЕТКА */
         .grid-wrap {
             flex: 1 1 auto; 
-            display: flex; flex-direction: column; gap: 4px;
+            display: flex; flex-direction: column; gap: 2px;
             overflow-x: auto; overflow-y: auto; padding-bottom: 5px; 
         }
         
-        .grid-section { transition: opacity 0.3s ease; display: flex; flex-direction: column; }
+        .grid-section { transition: opacity 0.3s ease; display: flex; flex-direction: column; justify-content: center;}
         .grid-row { display: flex; gap: 4px; min-width: max-content; margin-bottom: 2px;}
         
         .cell {
@@ -115,7 +115,7 @@
             display: flex; align-items: center; justify-content: center;
             box-shadow: 0 2px 4px rgba(0,0,0,0.02);
         }
-        /* Жесткие размеры клеточек, чтобы не плющились */
+        /* Базовые (десктопные) размеры */
         .cell-melody { width: 40px; height: 32px; border: 1px solid #e2e8f0; }
         .cell-rhythm { width: 40px; height: 45px; border: 2px dashed #cbd5e1; border-radius: 12px; }
         
@@ -127,11 +127,11 @@
         /* НИЖНЯЯ ПАНЕЛЬ С ИНСТРУМЕНТАМИ */
         .bottom-stage { 
             flex: 0 0 auto; margin-top: auto; padding: 12px; background: var(--card-bg); 
-            border-radius: 24px; box-shadow: 0 -5px 25px rgba(0,0,0,0.05);
+            border-radius: 20px; box-shadow: 0 -5px 25px rgba(0,0,0,0.05);
         }
 
         .instrument-palette { 
-            display: flex; flex-wrap: wrap; gap: 10px; 
+            display: flex; flex-wrap: wrap; gap: 8px; 
             justify-content: center; width: 100%;
         }
         
@@ -156,24 +156,33 @@
         }
         .inst-btn.bounce { animation: bounceAnim 0.2s ease; }
 
-        /* Адаптив для телефонов (вертикально) */
+        /* --- АДАПТИВНОСТЬ ДЛЯ ТЕЛЕФОНОВ --- */
         @media (max-width: 600px) {
-            .inst-btn { flex: 0 0 calc(33.333% - 7px); max-width: 110px; padding: 6px 4px; font-size: 9px; }
+            .inst-btn { flex: 0 0 calc(33.333% - 6px); max-width: 100px; padding: 4px; font-size: 9px; }
+            .bottom-stage { padding: 8px; border-radius: 16px; }
+            .grid-divider { flex: 0 0 4px; margin: 2px 0; }
+            .top-controls { margin-bottom: 5px; }
+            .btn-play { padding: 10px; font-size: 14px; }
+            .btn-icon { width: 42px; height: 42px; font-size: 18px; }
+            /* Уменьшаем ячейки по высоте и ширине, чтобы точно влезло */
+            .cell-melody { height: 26px; width: 36px; border-radius: 6px; }
+            .cell-rhythm { height: 38px; width: 36px; border-radius: 10px; }
+        }
+
+        /* Супер-низкие экраны телефонов */
+        @media (max-height: 700px) {
+            .cell-melody { height: 23px; width: 34px; }
+            .cell-rhythm { height: 34px; width: 34px; }
+            .grid-divider { flex: 0 0 3px; margin: 2px 0; }
+            .presets-carousel { padding-bottom: 4px; }
         }
 
         /* Адаптив для планшетов и ПК (горизонтально) */
         @media (min-width: 601px) {
             .instrument-palette { flex-wrap: nowrap; }
             .inst-btn { flex: 1; max-width: 130px; padding: 10px 5px; font-size: 12px;}
-            .cell-melody { width: 50px; height: 40px; }
-            .cell-rhythm { width: 50px; height: 55px; }
-        }
-        
-        /* Если экран телефона совсем низкий, чуть-чуть уменьшаем ячейки */
-        @media (max-height: 700px) {
-            .cell-melody { height: 26px; }
-            .cell-rhythm { height: 38px; }
-            .inst-btn { padding: 4px; font-size: 9px;}
+            .cell-melody { width: 50px; height: 38px; }
+            .cell-rhythm { width: 50px; height: 50px; }
         }
     </style>
 </head>
@@ -400,7 +409,7 @@
             } else {
                 state.grid[col][row] = { instId: state.instrument, color: inst.color };
                 cell.style.background = inst.color; cell.classList.add('cell-active');
-                playSound(state.instrument, RATES[row]); bounceHero();
+                playSound(state.instrument, RATES[row]); bounceHero(state.instrument);
             }
         }
 
@@ -413,12 +422,13 @@
             } else {
                 state.rhythmGrid[col] = { instId: state.instrument, color: inst.color };
                 cell.style.background = inst.color; cell.classList.add('cell-active');
-                playSound(state.instrument, 1.0); bounceHero();
+                playSound(state.instrument, 1.0); bounceHero(state.instrument);
             }
         }
 
-        function bounceHero() {
-            const activeBtn = document.getElementById(`btn-inst-${state.instrument}`);
+        // Заставляет подпрыгивать нужную кнопку
+        function bounceHero(instId) {
+            const activeBtn = document.getElementById(`btn-inst-${instId}`);
             if(activeBtn) {
                 activeBtn.classList.remove('bounce');
                 void activeBtn.offsetWidth; 
@@ -484,22 +494,25 @@
         function playLoop() {
             if(!state.isPlaying) return;
             updatePlayhead();
-            let doBounce = false;
+            
+            // Собираем все инструменты, которые звучат в этом шаге, чтобы заставить их прыгать
+            let instrumentsToBounce = new Set();
 
             if (state.grid[state.currentStep]) {
                 for(let r in state.grid[state.currentStep]) {
                     const id = state.grid[state.currentStep][r].instId;
                     playSound(id, RATES[r]);
-                    if(id === state.instrument) doBounce = true;
+                    instrumentsToBounce.add(id);
                 }
             }
             if (state.rhythmGrid[state.currentStep]) {
                 const id = state.rhythmGrid[state.currentStep].instId;
                 playSound(id, 1.0);
-                if(id === state.instrument) doBounce = true;
+                instrumentsToBounce.add(id);
             }
 
-            if(doBounce) bounceHero();
+            // Прыгают все, кто играет!
+            instrumentsToBounce.forEach(id => bounceHero(id));
 
             state.currentStep = (state.currentStep + 1) % STEPS;
             state.timer = setTimeout(playLoop, (60000 / state.tempo) / 4);
@@ -517,7 +530,7 @@
             }
         }
 
-        // --- УЛУЧШЕННЫЕ ПРЕСЕТЫ ---
+        // --- ПРЕСЕТЫ ---
         function clearGrid() {
             state.grid = {}; state.rhythmGrid = {};
             document.querySelectorAll('.cell-active').forEach(c => { c.classList.remove('cell-active'); c.style.background = ''; });
