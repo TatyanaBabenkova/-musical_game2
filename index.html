@@ -11,40 +11,41 @@
             --color-guitar: #3b82f6; --color-trumpet: #a855f7; --color-synth: #10b981;
         }
         * { box-sizing: border-box; touch-action: manipulation; }
-        body {
-            margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif;
-            background-color: var(--bg-color); color: var(--text-color);
-            display: flex; flex-direction: column; height: 100dvh; overflow: hidden;
-        }
-        #screen-start { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center; background: white; }
+        body { margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; background-color: var(--bg-color); color: var(--text-color); display: flex; flex-direction: column; height: 100dvh; overflow: hidden; }
+        
+        /* ЭКРАН 1 */
+        #screen-start { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center; background: linear-gradient(180deg, #ffffff 0%, var(--bg-color) 100%); }
         .start-header h1 { font-size: 32px; font-weight: 900; color: #3b82f6; margin: 0 0 10px 0; }
-        .hero-showcase { width: 180px; height: 180px; margin: 20px; background: #f8fafc; border-radius: 40px; border: 4px solid #e2e8f0; display: flex; align-items: center; justify-content: center; }
+        .start-header h2 { font-size: 16px; font-weight: 600; color: #64748b; margin: 0 0 15px 0; }
+        .start-header p { font-size: 12px; color: #94a3b8; max-width: 300px; margin: 0 auto 30px auto; }
+        .carousel { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
+        .nav-btn { background: var(--card-bg); border: none; border-radius: 50%; width: 45px; height: 45px; font-size: 20px; font-weight: bold; color: #3b82f6; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .hero-showcase { width: 160px; height: 160px; background: var(--card-bg); border-radius: 30px; display: flex; align-items: center; justify-content: center; border: 4px solid #e2e8f0; box-shadow: 0 10px 25px rgba(0,0,0,0.08); }
         .hero-showcase img { width: 90%; height: 90%; object-fit: contain; }
-        .btn-start { background: #3b82f6; color: white; border: none; padding: 15px 50px; border-radius: 30px; font-size: 20px; font-weight: bold; cursor: pointer; }
-        .nav-btn { background: none; border: 2px solid #3b82f6; color: #3b82f6; border-radius: 50%; width: 40px; height: 40px; font-size: 20px; cursor: pointer; }
+        .btn-start { background: #3b82f6; color: white; border: none; padding: 16px 40px; border-radius: 30px; font-size: 20px; font-weight: 900; cursor: pointer; box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4); }
 
+        /* ЭКРАН 2 */
         #screen-game { display: none; flex-direction: column; height: 100%; padding: 10px; }
+        .presets-carousel { display: flex; overflow-x: auto; gap: 8px; padding-bottom: 8px; flex: 0 0 auto; scrollbar-width: none; }
+        .preset-btn { flex: 0 0 auto; padding: 10px 16px; border-radius: 20px; background: var(--card-bg); border: 2px solid #e2e8f0; font-weight: 800; font-size: 12px; cursor: pointer; }
         .top-controls { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 8px; flex: 0 0 auto; }
-        .btn-play { background: #10b981; color: white; border: none; flex: 1; border-radius: 18px; font-weight: 900; font-size: 16px; height: 48px; cursor: pointer; }
+        .btn-play { background: #10b981; color: white; border: none; flex: 1; border-radius: 18px; font-weight: 900; font-size: 16px; cursor: pointer; }
         .btn-play.playing { background: #ef4444; }
         .btn-icon { width: 48px; height: 48px; background: #e2e8f0; border: none; border-radius: 18px; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-        
+
         .grid-wrap { flex: 1 1 auto; display: flex; flex-direction: column; justify-content: center; overflow: auto; align-items: center; }
-        .grid-section { display: flex; flex-direction: column; min-width: max-content; transition: opacity 0.3s; }
+        .grid-section { display: flex; flex-direction: column; min-width: max-content; }
         .grid-row { display: flex; gap: 4px; margin-bottom: 2px; }
-        
         .cell { width: 40px; height: 32px; background: white; border-radius: 8px; border: 1px solid #e2e8f0; cursor: pointer; }
-        .cell-label { width: 40px; height: 32px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 900; color: #64748b; background: none; border: none; pointer-events: none; }
+        .cell-label { width: 45px; height: 32px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 900; color: #64748b; pointer-events: none; }
         .cell-rhythm { height: 45px; border: 2px dashed #cbd5e1; border-radius: 12px; }
         .playhead-col { background: #cbd5e1 !important; }
 
         .bottom-stage { background: white; padding: 12px; border-radius: 20px 20px 0 0; box-shadow: 0 -5px 25px rgba(0,0,0,0.05); padding-bottom: calc(12px + env(safe-area-inset-bottom)); }
         .instrument-palette { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
-        .inst-btn { flex: 0 0 calc(33.333% - 10px); max-width: 100px; padding: 8px 4px; border-radius: 16px; border: 3px solid transparent; background: #f1f5f9; display: flex; flex-direction: column; align-items: center; cursor: pointer; }
-        
-        /* Подсветка выбранного инструмента */
-        .inst-btn.selected { background: white !important; border-color: #3b82f6 !important; transform: scale(1.05); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-        .inst-img { width: 100%; aspect-ratio: 1/1; object-fit: contain; }
+        .inst-btn { flex: 0 0 calc(33.333% - 6px); max-width: 100px; padding: 8px 4px; border-radius: 16px; border: 3px solid transparent; background: #f1f5f9; display: flex; flex-direction: column; align-items: center; cursor: pointer; }
+        .inst-btn.selected { background: #ffffff !important; border-color: #3b82f6 !important; transform: scale(1.05); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .inst-img { width: 45px; height: 45px; object-fit: contain; }
         
         .settings-menu { display: none; position: absolute; top: 120px; right: 10px; background: white; padding: 15px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); border: 2px solid #e2e8f0; z-index: 100; flex-direction: column; gap: 10px; }
         @keyframes bounce { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1) translateY(-5px); } }
@@ -58,21 +59,20 @@
             <h2>Создай свой первый хит!</h2>
             <p>Выбирай музыканта, расставляй ноты и слушай результат.</p>
         </div>
-        <div style="display:flex; align-items:center; gap:10px;">
+        <div class="carousel">
             <button class="nav-btn" onclick="changeHero(-1)">❮</button>
             <div class="hero-showcase"><img id="startImg" src=""></div>
             <button class="nav-btn" onclick="changeHero(1)">❯</button>
         </div>
-        <h2 id="heroName"></h2>
+        <div class="hero-info"><h3 id="heroName"></h3><p id="heroDesc"></p></div>
         <button class="btn-start" onclick="startGame()">НАЧАТЬ ИГРУ</button>
     </div>
 
     <div id="screen-game">
-        <div class="presets-carousel" style="display:flex; overflow-x:auto; gap:8px; padding-bottom:8px; scrollbar-width:none;">
+        <div class="presets-carousel">
             <button class="preset-btn" onclick="loadPreset('yolochka')">🎄 Ёлочка</button>
             <button class="preset-btn" onclick="loadPreset('kuznechik')">🦗 Кузнечик</button>
             <button class="preset-btn" onclick="loadPreset('rock')">🤘 Рок</button>
-            <button class="preset-btn" onclick="loadPreset('dance')">🪩 Клуб</button>
             <button class="preset-btn" onclick="loadPreset('pop')">🌟 Попса</button>
             <button class="preset-btn" onclick="loadPreset('lullaby')">🌙 Сон</button>
         </div>
@@ -95,13 +95,18 @@
     </div>
 
     <script>
-        const HEROES = [{id:'cat', name:'Кошечка', desc:'Поп-звезда!'}, {id:'dog', name:'Щенок', desc:'Панк-рокер!'}, {id:'bear', name:'Мишка', desc:'Хип-хоп диджей!'}, {id:'fox', name:'Лисичка', desc:'Джаз и фанк!'}];
+        const HEROES = [
+            {id:'cat', name:'Кошечка', desc:'Поп-звезда!'}, 
+            {id:'dog', name:'Щенок', desc:'Панк-рокер!'},
+            {id:'bear', name:'Мишка', desc:'Хип-хоп диджей!'}, 
+            {id:'fox', name:'Лисичка', desc:'Джаз и фанк!'}
+        ];
         const INSTS = {
-            guitar: {id:'guitar', type:'mel', img:'guitar', color:'#3b82f6', file:'guitar_base.wav'},
-            trumpet: {id:'trumpet', type:'mel', img:'trumpet', color:'#a855f7', file:'trumpet_base.wav'},
-            synth: {id:'synth', type:'mel', img:'synth', color:'#10b981', file:'synth_base.wav'},
-            kick: {id:'kick', type:'rhy', img:'drum', color:'#ef4444', file:'kick.wav'},
-            cymbals: {id:'cymbals', type:'rhy', img:'cymbals', color:'#eab308', file:'cymbal.wav'}
+            guitar: {id:'guitar', type:'mel', color:'#3b82f6', file:'guitar_base.wav'},
+            trumpet: {id:'trumpet', type:'mel', color:'#a855f7', file:'trumpet_base.wav'},
+            synth: {id:'synth', type:'mel', color:'#10b981', file:'synth_base.wav'},
+            kick: {id:'kick', type:'rhy', color:'#ef4444', file:'kick.wav'},
+            cymbals: {id:'cymbals', type:'rhy', color:'#eab308', file:'cymbal.wav'}
         };
         const NOTES = ["СИ", "ЛЯ", "СОЛЬ", "ФА", "МИ", "РЕ", "ДО"];
         const RATES = [2.0, 1.682, 1.498, 1.335, 1.26, 1.122, 1.0];
@@ -112,44 +117,45 @@
             state.hero = (state.hero + dir + HEROES.length) % HEROES.length;
             document.getElementById('startImg').src = `img/${HEROES[state.hero].id}_base.png`;
             document.getElementById('heroName').innerText = HEROES[state.hero].name;
+            document.getElementById('heroDesc').innerText = HEROES[state.hero].desc;
         }
 
         async function startGame() {
             document.getElementById('screen-start').style.display = 'none';
             document.getElementById('screen-game').style.display = 'flex';
-            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            for (let k in INSTS) {
-                fetch(`sounds/${INSTS[k].file}`).then(r => r.arrayBuffer()).then(ab => audioCtx.decodeAudioData(ab, b => buffers[k] = b));
-            }
-            renderGame(); selectInstrument('guitar');
+            
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            audioCtx = new AudioContext();
+            if (audioCtx.state === 'suspended') await audioCtx.resume();
+            
+            // Загрузка звуков БЕЗ блокировки интерфейса
+            Object.keys(INSTS).forEach(k => {
+                fetch(`sounds/${INSTS[k].file}`).then(r => r.arrayBuffer()).then(ab => audioCtx.decodeAudioData(ab, b => buffers[k] = b)).catch(() => {});
+            });
+
+            renderGame();
+            selectInstrument('guitar');
         }
 
         function renderGame() {
             const mel = document.getElementById('melGrid'), rhy = document.getElementById('rhyGrid');
             mel.innerHTML = rhy.innerHTML = '';
-            
             for(let r=0; r<7; r++) {
                 const row = document.createElement('div'); row.className = 'grid-row';
-                // Первый столбец - названия нот
-                const label = document.createElement('div'); label.className = 'cell-label'; label.innerText = NOTES[r];
-                row.appendChild(label);
-                
+                const label = document.createElement('div'); label.className = 'cell-label'; label.innerText = NOTES[r]; row.appendChild(label);
                 for(let c=0; c<state.steps; c++) {
                     const cell = document.createElement('div'); cell.className = 'cell'; cell.id = `m-${c}-${r}`;
-                    cell.onclick = () => { if(state.playing || INSTS[state.inst].type !== 'mel') return; toggleCell(c, r, 'mel'); };
+                    cell.onclick = () => { if(!state.playing && INSTS[state.inst].type === 'mel') toggleCell(c, r, 'mel'); };
                     if(state.grid[c] && state.grid[c][r]) cell.style.background = INSTS[state.grid[c][r]].color;
                     row.appendChild(cell);
                 }
                 mel.appendChild(row);
             }
-            
             const rRow = document.createElement('div'); rRow.className = 'grid-row';
-            const rLabel = document.createElement('div'); rLabel.className = 'cell-label'; rLabel.innerText = "Ритм";
-            rRow.appendChild(rLabel);
-            
+            const rLabel = document.createElement('div'); rLabel.className = 'cell-label'; rLabel.innerText = "РИТМ"; rRow.appendChild(rLabel);
             for(let c=0; c<state.steps; c++) {
                 const cell = document.createElement('div'); cell.className = 'cell cell-rhythm'; cell.id = `r-${c}`;
-                cell.onclick = () => { if(state.playing || INSTS[state.inst].type !== 'rhy') return; toggleCell(c, 0, 'rhy'); };
+                cell.onclick = () => { if(!state.playing && INSTS[state.inst].type === 'rhy') toggleCell(c, 0, 'rhy'); };
                 if(state.rhy[c]) cell.style.background = INSTS[state.rhy[c]].color;
                 rRow.appendChild(cell);
             }
@@ -163,7 +169,8 @@
                 const btn = document.createElement('button'); btn.className = 'inst-btn'; btn.id = `btn-${k}`;
                 if(state.inst === k && !state.playing) btn.classList.add('selected');
                 btn.onclick = () => selectInstrument(k);
-                btn.innerHTML = `<img class="inst-img" src="img/${HEROES[state.hero].id}_${INSTS[k].img}.png">`;
+                const iconMap = {guitar:'guitar', trumpet:'trumpet', synth:'synth', kick:'drum', cymbals:'cymbals'};
+                btn.innerHTML = `<img class="inst-img" src="img/${HEROES[state.hero].id}_${iconMap[k]}.png">`;
                 p.appendChild(btn);
             });
         }
@@ -172,10 +179,8 @@
             state.inst = id;
             document.querySelectorAll('.inst-btn').forEach(b => b.classList.remove('selected'));
             const active = document.getElementById(`btn-${id}`); if(active && !state.playing) active.classList.add('selected');
-            
-            // Затемнение невыбранной части таблицы
-            document.getElementById('melGrid').style.opacity = INSTS[id].type === 'mel' ? 1 : var(--inactive-opacity);
-            document.getElementById('rhyGrid').style.opacity = INSTS[id].type === 'rhy' ? 1 : var(--inactive-opacity);
+            document.getElementById('melGrid').style.opacity = INSTS[id].type === 'mel' ? 1 : 0.2;
+            document.getElementById('rhyGrid').style.opacity = INSTS[id].type === 'rhy' ? 1 : 0.2;
         }
 
         function toggleCell(c, r, type) {
@@ -191,11 +196,11 @@
         }
 
         function playSound(k, r) {
-            if(!buffers[k]) return;
+            if(!audioCtx || !buffers[k]) return;
             const t = audioCtx.currentTime;
-            if(activeNodes[k]) { try { activeNodes[k].stop(t + 0.05); } catch(e){} }
+            if(activeNodes[k]) { try { activeNodes[k].stop(t+0.05); } catch(e){} }
             const s = audioCtx.createBufferSource(); s.buffer = buffers[k]; s.playbackRate.value = r;
-            const g = audioCtx.createGain(); g.gain.setValueAtTime(0.8, t); g.gain.exponentialRampToValueAtTime(0.01, t + 0.5);
+            const g = audioCtx.createGain(); g.gain.setValueAtTime(0.7, t); g.gain.exponentialRampToValueAtTime(0.01, t + 0.5);
             s.connect(g); g.connect(audioCtx.destination); s.start(); activeNodes[k] = s;
         }
 
@@ -241,14 +246,15 @@
                 [0,4,8,12,16,20,24,28].forEach(c => draw(c, 0, 'kick', true));
                 [[0,6],[2,4],[4,4],[6,2],[8,6],[12,3],[14,3],[16,6],[18,1],[20,1],[22,2],[24,6],[28,4],[30,4]].forEach(n => draw(n[0], n[1], 'synth'));
             } else if(type === 'kuznechik') {
-                state.steps = 32; state.tempo = 130;
-                [0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30].forEach(c => draw(c, 0, 'cymbals', true));
+                state.steps = 32; state.tempo = 140;
+                for(let i=0; i<32; i+=2) draw(i, 0, 'cymbals', true);
                 [[0,1],[2,4],[4,1],[6,4],[8,1],[10,2],[12,2],[16,2],[18,4],[20,2],[22,4],[24,2],[26,1],[28,1]].forEach(n => draw(n[0], n[1], 'guitar'));
             }
             renderGame(); changeTempo(state.tempo); document.getElementById('stepSelect').value = state.steps;
         }
 
         async function exportWav() {
+            if(!audioCtx) return;
             const dur = 10, sr = 44100;
             const offline = new (window.OfflineAudioContext || window.webkitOfflineAudioContext)(2, sr * dur, sr);
             const stepDur = (60 / state.tempo) / 4;
@@ -278,6 +284,7 @@
             for (let i = 0; i < buffer.length; i++) for (let j = 0; j < n; j++) { let s = Math.max(-1, Math.min(1, buffer.getChannelData(j)[i])); view.setInt16(pos, s < 0 ? s * 0x8000 : s * 0x7FFF, true); pos += 2; }
             return new Blob([buffer2], {type: 'audio/wav'});
         }
+
         changeHero(0);
     </script>
 </body>
