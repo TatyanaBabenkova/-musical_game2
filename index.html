@@ -113,31 +113,42 @@
         /* РАЗДЕЛИТЕЛЬ СЕТКИ */
         .grid-divider { height: 6px; background: #cbd5e1; border-radius: 4px; margin: 4px 0 8px 0; min-width: max-content;}
 
-        /* НИЖНЯЯ ПАНЕЛЬ С ГЕРОЕМ И ИНСТРУМЕНТАМИ */
+        /* НИЖНЯЯ ПАНЕЛЬ С ИНСТРУМЕНТАМИ (ТЕПЕРЬ ТУТ КАРТИНКИ) */
         .bottom-stage { 
-            display: flex; gap: 12px; margin-top: auto; align-items: center; 
+            display: flex; margin-top: auto; align-items: center; 
             padding: 12px; background: var(--card-bg); border-radius: 24px; 
             box-shadow: 0 -5px 25px rgba(0,0,0,0.05);
         }
-        
-        .character-container {
-            width: 80px; height: 80px; background: var(--bg-color); border-radius: 20px;
-            display: flex; align-items: center; justify-content: center;
-            border: 3px solid #e2e8f0; font-size: 35px; overflow: hidden;
-            transition: transform 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        .character-container img { width: 100%; height: 100%; object-fit: contain; display: none; }
-        .bounce { transform: scale(1.15) translateY(-8px); }
 
-        .instrument-palette { display: flex; flex-wrap: wrap; gap: 6px; flex: 1; justify-content: flex-end; }
-        .inst-btn {
-            flex: 1 1 30%; max-width: 80px; padding: 8px 4px; border-radius: 14px; border: 2px solid transparent;
-            font-size: 10px; font-weight: 900; background: var(--bg-color); color: #64748b;
-            text-transform: uppercase; cursor: pointer; transition: 0.2s;
-            display: flex; flex-direction: column; align-items: center; gap: 2px;
+        .instrument-palette { 
+            display: flex; flex-wrap: nowrap; gap: 6px; flex: 1; 
+            justify-content: space-between; overflow-x: auto; 
+            scrollbar-width: none;
         }
-        .inst-btn.selected { transform: scale(1.05); color: white; }
-        .inst-btn i { font-size: 18px; font-style: normal; }
+        .instrument-palette::-webkit-scrollbar { display: none; }
+        
+        .inst-btn {
+            flex: 1 1 0; min-width: 55px;
+            padding: 6px 4px; border-radius: 16px; border: 3px solid transparent;
+            font-size: 9px; font-weight: 900; background: var(--bg-color); color: #64748b;
+            text-transform: uppercase; cursor: pointer; transition: 0.2s;
+            display: flex; flex-direction: column; align-items: center; justify-content: space-between; gap: 4px;
+        }
+        .inst-btn.selected { 
+            transform: scale(1.05); color: var(--text-color); background: #ffffff !important;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
+        }
+        .inst-img { width: 100%; aspect-ratio: 1/1; object-fit: contain; }
+        .inst-emoji { font-size: 22px; padding: 5px 0; }
+        .inst-name { white-space: nowrap; }
+
+        /* Анимация прыжка для кнопки при звучании */
+        @keyframes bounceAnim {
+            0% { transform: scale(1.05) translateY(0); }
+            50% { transform: scale(1.15) translateY(-5px); }
+            100% { transform: scale(1.05) translateY(0); }
+        }
+        .inst-btn.bounce { animation: bounceAnim 0.2s ease; }
 
         @media (max-height: 700px) {
             .cell-melody { height: 26px; }
@@ -193,11 +204,8 @@
         </div>
 
         <div class="bottom-stage">
-            <div class="character-container" id="charStage">
-                <span id="charEmoji">🐱</span>
-                <img id="charImg" src="" alt="hero" onerror="this.style.display='none'; document.getElementById('charEmoji').style.display='block';">
-            </div>
-            <div class="instrument-palette" id="palette"></div>
+            <div class="instrument-palette" id="palette">
+                </div>
         </div>
     </div>
 
@@ -225,8 +233,8 @@
         let state = {
             heroIdx: 0,
             instrument: 'guitar',
-            grid: {}, // grid[col][row] = { instId, color }
-            rhythmGrid: {}, // rhythmGrid[col] = { instId, color }
+            grid: {}, 
+            rhythmGrid: {}, 
             isPlaying: false,
             currentStep: 0,
             tempo: 120,
@@ -248,7 +256,7 @@
             imgEl.style.display = 'block';
             emojiEl.style.display = 'none';
             emojiEl.textContent = h.icon;
-            imgEl.src = `img/${h.id}_base.png`; // Подгрузка картинки
+            imgEl.src = `img/${h.id}_base.png`; 
         }
 
         function prevHero() { state.heroIdx = (state.heroIdx - 1 + HEROES.length) % HEROES.length; updateCarousel(); }
@@ -275,7 +283,9 @@
         }
 
         function buildUI() {
+            // Строим сетку Мелодии
             const melSec = document.getElementById('melody-section');
+            melSec.innerHTML = ''; // Очистка на всякий случай
             for (let r = 0; r < MELODY_ROWS; r++) {
                 let rowHtml = `<div class="grid-row">`;
                 for (let c = 0; c < STEPS; c++) rowHtml += `<div class="cell cell-melody" id="cell-m-${c}-${r}" onclick="toggleMelody(${c}, ${r})"></div>`;
@@ -283,6 +293,7 @@
                 melSec.innerHTML += rowHtml;
             }
 
+            // Строим сетку Ритма
             const rhySec = document.getElementById('rhythm-section');
             let rowHtml = `<div class="grid-row">`;
             for (let c = 0; c < STEPS; c++) rowHtml += `<div class="cell cell-rhythm" id="cell-r-${c}" onclick="toggleRhythm(${c})"></div>`;
@@ -290,12 +301,18 @@
             rhySec.innerHTML = rowHtml;
             document.getElementById('gridDivider').style.width = `${STEPS * 46}px`;
 
+            // Строим палитру ИЗ КАРТИНОК ГЕРОЯ
             const pal = document.getElementById('palette');
+            pal.innerHTML = '';
+            const hero = HEROES[state.heroIdx]; 
+            
             for (let k in INSTRUMENTS) {
                 const inst = INSTRUMENTS[k];
                 pal.innerHTML += `
                     <button class="inst-btn" id="btn-inst-${k}" onclick="selectInstrument('${k}')">
-                        <i>${inst.icon}</i> ${inst.name}
+                        <img class="inst-img" src="img/${hero.id}_${k}.png" alt="${inst.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                        <span class="inst-emoji" style="display:none;">${hero.icon}${inst.icon}</span>
+                        <div class="inst-name">${inst.name}</div>
                     </button>`;
             }
         }
@@ -304,24 +321,19 @@
         function selectInstrument(instId) {
             state.instrument = instId;
             const inst = INSTRUMENTS[instId];
-            const hero = HEROES[state.heroIdx];
             
-            // Стили кнопок
+            // Сбрасываем стили у всех кнопок
             document.querySelectorAll('.inst-btn').forEach(b => {
-                b.classList.remove('selected'); b.style.background = 'var(--bg-color)'; b.style.borderColor = 'transparent';
+                b.classList.remove('selected'); 
+                b.style.background = 'var(--bg-color)'; 
+                b.style.borderColor = 'transparent';
             });
-            const activeBtn = document.getElementById(`btn-inst-${instId}`);
-            activeBtn.classList.add('selected'); activeBtn.style.background = inst.color; activeBtn.style.borderColor = inst.color;
-
-            // Обновляем картинку героя внизу
-            const stage = document.getElementById('charStage');
-            const imgEl = document.getElementById('charImg');
-            const emojiEl = document.getElementById('charEmoji');
             
-            stage.style.borderColor = inst.color;
-            emojiEl.textContent = hero.icon + inst.icon;
-            imgEl.style.display = 'block'; emojiEl.style.display = 'none';
-            imgEl.src = `img/${hero.id}_${instId}.png`;
+            // Красим выбранную кнопку
+            const activeBtn = document.getElementById(`btn-inst-${instId}`);
+            activeBtn.classList.add('selected'); 
+            activeBtn.style.background = '#ffffff'; 
+            activeBtn.style.borderColor = inst.color;
 
             // УМНОЕ ЗАТЕМНЕНИЕ СЕТОК
             const melSec = document.getElementById('melody-section');
@@ -364,10 +376,13 @@
         }
 
         function bounceHero() {
-            const stage = document.getElementById('charStage');
-            stage.classList.remove('bounce');
-            void stage.offsetWidth; 
-            stage.classList.add('bounce');
+            // Прыгает сама выбранная кнопка с картинкой
+            const activeBtn = document.getElementById(`btn-inst-${state.instrument}`);
+            if(activeBtn) {
+                activeBtn.classList.remove('bounce');
+                void activeBtn.offsetWidth; // Магия для перезапуска CSS анимации
+                activeBtn.classList.add('bounce');
+            }
         }
 
         // --- ВОСПРОИЗВЕДЕНИЕ И ЗВУКИ ---
@@ -466,7 +481,7 @@
             }
         }
 
-        updateCarousel(); // Старт
+        updateCarousel(); // Старт карусели
     </script>
 </body>
 </html>
