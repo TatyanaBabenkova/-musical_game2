@@ -25,7 +25,8 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
-            display: flex; flex-direction: column; height: 100vh;
+            display: flex; flex-direction: column; 
+            height: 100dvh; /* Умная высота для мобильных браузеров */
             overflow: hidden;
         }
 
@@ -67,12 +68,12 @@
         .btn-start:active { transform: scale(0.95); }
 
         /* --- ЭКРАН 2: ИГРА --- */
-        #screen-game { display: none; flex-direction: column; height: 100%; padding: 10px; }
+        #screen-game { display: none; flex-direction: column; height: 100%; padding: 10px; position: relative;}
 
         /* Карусель пресетов */
         .presets-carousel {
             display: flex; overflow-x: auto; gap: 8px; padding-bottom: 10px;
-            scrollbar-width: none; margin-bottom: 5px;
+            scrollbar-width: none; margin-bottom: 5px; flex: 0 0 auto;
         }
         .presets-carousel::-webkit-scrollbar { display: none; }
         .preset-btn {
@@ -82,38 +83,49 @@
         }
         .preset-btn:active { background: #e2e8f0; }
 
-        /* Верхняя панель (Play, Save, Clear) */
-        .top-controls { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 15px; align-items: stretch;}
-        .btn-play { background: #10b981; color: white; flex: 1; padding: 14px; border-radius: 18px; font-size: 18px; font-weight: 900; border: none; box-shadow: 0 6px 15px rgba(16, 185, 129, 0.4); transition: 0.2s;}
+        /* Верхняя панель */
+        .top-controls { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 10px; align-items: stretch; flex: 0 0 auto;}
+        .btn-play { background: #10b981; color: white; flex: 1; padding: 12px; border-radius: 18px; font-size: 16px; font-weight: 900; border: none; box-shadow: 0 6px 15px rgba(16, 185, 129, 0.4); transition: 0.2s;}
         .btn-play.playing { background: #ef4444; box-shadow: 0 6px 15px rgba(239, 68, 68, 0.4); }
-        .btn-icon { width: 55px; background: #e2e8f0; border: none; border-radius: 18px; font-size: 22px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s;}
+        .btn-icon { width: 48px; background: #e2e8f0; border: none; border-radius: 18px; font-size: 20px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s;}
         .btn-icon:active { transform: scale(0.9); }
+
+        /* Всплывающее меню настроек */
+        .settings-menu {
+            display: none; position: absolute; top: 120px; right: 10px; 
+            background: var(--card-bg); padding: 15px; border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15); border: 2px solid #e2e8f0; z-index: 100;
+            flex-direction: column; gap: 10px;
+        }
+        .settings-menu label { font-size: 12px; font-weight: bold; color: #64748b; }
+        .settings-menu select { padding: 8px; border-radius: 8px; border: 1px solid #cbd5e1; font-weight: bold; font-family: inherit;}
 
         /* ИГРОВАЯ СЕТКА */
         .grid-wrap {
-            flex: 1; display: flex; flex-direction: column; gap: 4px;
-            overflow-x: auto; overflow-y: hidden; padding-bottom: 5px;
+            flex: 1 1 auto; /* Позволяет сетке сжиматься и растягиваться */
+            display: flex; flex-direction: column; gap: 4px;
+            overflow-x: auto; overflow-y: hidden; padding-bottom: 5px; min-height: 0;
         }
         
-        .grid-section { transition: opacity 0.3s ease; }
-        .grid-row { display: flex; gap: 4px; min-width: max-content; margin-bottom: 4px; }
+        .grid-section { transition: opacity 0.3s ease; display: flex; flex-direction: column; justify-content: space-between; height: 100%;}
+        .grid-row { display: flex; gap: 4px; min-width: max-content; flex: 1; margin-bottom: 2px;}
         
         .cell {
             background: var(--card-bg); border-radius: 8px; cursor: pointer; transition: 0.1s;
             display: flex; align-items: center; justify-content: center;
             box-shadow: 0 2px 4px rgba(0,0,0,0.02);
         }
-        .cell-melody { width: 42px; height: 32px; border: 1px solid #e2e8f0; }
-        .cell-rhythm { width: 42px; height: 45px; border: 2px dashed #cbd5e1; border-radius: 12px; }
+        .cell-melody { width: 40px; border: 1px solid #e2e8f0; }
+        .cell-rhythm { width: 40px; border: 2px dashed #cbd5e1; border-radius: 12px; }
         
         .cell-active { box-shadow: inset 0 0 0 3px rgba(255,255,255,0.4); transform: scale(0.95); }
         .playhead-col { background: #cbd5e1 !important; border-color: #94a3b8; }
 
-        .grid-divider { height: 6px; background: #cbd5e1; border-radius: 4px; margin: 4px 0 8px 0; min-width: max-content;}
+        .grid-divider { flex: 0 0 6px; background: #cbd5e1; border-radius: 4px; margin: 4px 0; min-width: max-content;}
 
-        /* НИЖНЯЯ ПАНЕЛЬ С ИНСТРУМЕНТАМИ (2 РЯДА) */
+        /* НИЖНЯЯ ПАНЕЛЬ С ИНСТРУМЕНТАМИ */
         .bottom-stage { 
-            margin-top: auto; padding: 12px; background: var(--card-bg); 
+            flex: 0 0 auto; margin-top: auto; padding: 12px; background: var(--card-bg); 
             border-radius: 24px; box-shadow: 0 -5px 25px rgba(0,0,0,0.05);
         }
 
@@ -123,8 +135,6 @@
         }
         
         .inst-btn {
-            /* 33.33% минус отступы дает ровно 3 элемента в верхнем ряду, остальные падают вниз */
-            flex: 0 0 calc(33.333% - 7px); max-width: 110px;
             padding: 8px 4px; border-radius: 16px; border: 3px solid transparent;
             font-size: 10px; font-weight: 900; background: var(--bg-color); color: #64748b;
             text-transform: uppercase; cursor: pointer; transition: 0.2s;
@@ -145,10 +155,18 @@
         }
         .inst-btn.bounce { animation: bounceAnim 0.2s ease; }
 
-        @media (max-height: 700px) {
-            .cell-melody { height: 26px; }
-            .cell-rhythm { height: 38px; }
-            .inst-btn { padding: 4px; font-size: 9px;}
+        /* Адаптив для телефонов (вертикально) */
+        @media (max-width: 600px) {
+            .inst-btn { flex: 0 0 calc(33.333% - 7px); max-width: 110px; padding: 6px 4px; font-size: 9px; }
+            /* Первые три в один ряд, остальные два падают вниз и центрируются */
+        }
+
+        /* Адаптив для планшетов и ПК (горизонтально) */
+        @media (min-width: 601px) {
+            .instrument-palette { flex-wrap: nowrap; }
+            .inst-btn { flex: 1; max-width: 130px; padding: 10px 5px; font-size: 12px;}
+            .cell-melody { width: 50px; }
+            .cell-rhythm { width: 50px; }
         }
     </style>
 </head>
@@ -180,7 +198,7 @@
 
     <div id="screen-game">
         <div class="presets-carousel" id="presets-container">
-            <button class="preset-btn" onclick="loadPreset('rock')">🤘 Рок-хит</button>
+            <button class="preset-btn" onclick="loadPreset('rock')">🤘 Рок</button>
             <button class="preset-btn" onclick="loadPreset('dance')">🪩 Клуб</button>
             <button class="preset-btn" onclick="loadPreset('pop')">🌟 Попса</button>
             <button class="preset-btn" onclick="loadPreset('hiphop')">🧢 Хип-хоп</button>
@@ -195,13 +213,22 @@
         <div class="top-controls">
             <button class="btn-play" id="btnPlay" onclick="togglePlay()">▶ ИГРАТЬ</button>
             <button class="btn-icon" onclick="exportWav()" title="Сохранить">💾</button>
+            <button class="btn-icon" onclick="toggleSettings()" title="Настройки">⚙️</button>
             <button class="btn-icon" onclick="clearGrid()" title="Очистить">🗑️</button>
+        </div>
+
+        <div class="settings-menu" id="settingsMenu">
+            <label>Длина трека:</label>
+            <select id="stepSelect" onchange="changeSteps(this.value)">
+                <option value="16" selected>16 шагов (Стандарт)</option>
+                <option value="32">32 шага (Длинный)</option>
+            </select>
         </div>
 
         <div class="grid-wrap" id="gridWrap">
             <div id="melody-section" class="grid-section"></div>
             <div class="grid-divider" id="gridDivider"></div>
-            <div id="rhythm-section" class="grid-section"></div>
+            <div id="rhythm-section" class="grid-section" style="flex: 0 0 auto;"></div>
         </div>
 
         <div class="bottom-stage">
@@ -218,7 +245,6 @@
             { id: 'fox', name: "Лисичка", icon: "🦊", desc: "Джаз и фанк. Самая стильная." }
         ];
 
-        // ВАЖНО: imgName указывает, как называется часть файла (напр. cat_drum.png)
         const INSTRUMENTS = {
             guitar: { id: 'guitar', type: 'melody', imgName: 'guitar', color: 'var(--color-guitar)', file: 'guitar_base.wav', icon: '🎸', name: 'Гитара' },
             trumpet: { id: 'trumpet', type: 'melody', imgName: 'trumpet', color: 'var(--color-trumpet)', file: 'trumpet_base.wav', icon: '🎺', name: 'Труба' },
@@ -227,7 +253,7 @@
             cymbal: { id: 'cymbal', type: 'rhythm', imgName: 'cymbals', color: 'var(--color-cymbal)', file: 'cymbal.wav', icon: '🔔', name: 'Тарелки' }
         };
 
-        const STEPS = 16;
+        let STEPS = 16;
         const MELODY_ROWS = 7;
         const RATES = [2.0, 1.68, 1.498, 1.26, 1.122, 1.0, 0.84]; 
         
@@ -297,7 +323,6 @@
             for (let c = 0; c < STEPS; c++) rowHtml += `<div class="cell cell-rhythm" id="cell-r-${c}" onclick="toggleRhythm(${c})"></div>`;
             rowHtml += `</div>`;
             rhySec.innerHTML = rowHtml;
-            document.getElementById('gridDivider').style.width = `${STEPS * 46}px`;
 
             const pal = document.getElementById('palette');
             pal.innerHTML = '';
@@ -311,6 +336,20 @@
                         <span class="inst-emoji" style="display:none;">${hero.icon}${inst.icon}</span>
                         <div class="inst-name">${inst.name}</div>
                     </button>`;
+            }
+
+            // Восстановление активных клеток после перерисовки
+            for(let c in state.grid) {
+                if(c >= STEPS) continue;
+                for(let r in state.grid[c]) {
+                    const cell = document.getElementById(`cell-m-${c}-${r}`);
+                    if(cell) { cell.classList.add('cell-active'); cell.style.background = state.grid[c][r].color; }
+                }
+            }
+            for(let c in state.rhythmGrid) {
+                if(c >= STEPS) continue;
+                const cell = document.getElementById(`cell-r-${c}`);
+                if(cell) { cell.classList.add('cell-active'); cell.style.background = state.rhythmGrid[c].color; }
             }
         }
 
@@ -326,9 +365,11 @@
             });
             
             const activeBtn = document.getElementById(`btn-inst-${instId}`);
-            activeBtn.classList.add('selected'); 
-            activeBtn.style.background = '#ffffff'; 
-            activeBtn.style.borderColor = inst.color;
+            if(activeBtn) {
+                activeBtn.classList.add('selected'); 
+                activeBtn.style.background = '#ffffff'; 
+                activeBtn.style.borderColor = inst.color;
+            }
 
             const melSec = document.getElementById('melody-section');
             const rhySec = document.getElementById('rhythm-section');
@@ -376,6 +417,18 @@
                 void activeBtn.offsetWidth; 
                 activeBtn.classList.add('bounce');
             }
+        }
+
+        // --- НАСТРОЙКИ ---
+        function toggleSettings() {
+            const menu = document.getElementById('settingsMenu');
+            menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        function changeSteps(val) {
+            STEPS = parseInt(val);
+            document.getElementById('settingsMenu').style.display = 'none';
+            buildUI();
         }
 
         // --- ВОСПРОИЗВЕДЕНИЕ И ЗВУКИ ---
@@ -448,12 +501,16 @@
         function updatePlayhead() {
             document.querySelectorAll('.cell-melody, .cell-rhythm').forEach(c => c.classList.remove('playhead-col'));
             if(state.isPlaying) {
-                for(let r=0; r<MELODY_ROWS; r++) document.getElementById(`cell-m-${state.currentStep}-${r}`).classList.add('playhead-col');
-                document.getElementById(`cell-r-${state.currentStep}`).classList.add('playhead-col');
+                for(let r=0; r<MELODY_ROWS; r++) {
+                    const cell = document.getElementById(`cell-m-${state.currentStep}-${r}`);
+                    if(cell) cell.classList.add('playhead-col');
+                }
+                const cellR = document.getElementById(`cell-r-${state.currentStep}`);
+                if(cellR) cellR.classList.add('playhead-col');
             }
         }
 
-        // --- ПРЕСЕТЫ ---
+        // --- УЛУЧШЕННЫЕ ПРЕСЕТЫ ---
         function clearGrid() {
             state.grid = {}; state.rhythmGrid = {};
             document.querySelectorAll('.cell-active').forEach(c => { c.classList.remove('cell-active'); c.style.background = ''; });
@@ -461,40 +518,50 @@
 
         function loadPreset(type) {
             clearGrid();
-            let prevInst = state.instrument; // запоминаем инструмент, чтобы вернуть в конце
+            let prevInst = state.instrument; 
             
             const drawMelody = (inst, arr) => { selectInstrument(inst); arr.forEach(pos => toggleMelody(pos[0], pos[1])); }
             const drawRhythm = (inst, arr) => { selectInstrument(inst); arr.forEach(col => toggleRhythm(col)); }
 
             if(type === 'rock') {
-                drawRhythm('kick', [0, 8]); drawRhythm('cymbal', [4, 12]);
-                drawMelody('guitar', [[0,6],[2,5],[4,4],[8,6],[10,5],[12,4]]);
+                // Мощный бит + аккорды гитары
+                drawRhythm('kick', [0, 6, 8, 14]); drawRhythm('cymbal', [4, 12]);
+                drawMelody('guitar', [[0,6],[0,4],[2,5],[2,3],[4,4],[4,2],[8,6],[8,4],[10,5],[10,3],[12,4],[12,2]]);
             } else if (type === 'dance') {
+                // Прямая бочка + быстрый перебор
                 drawRhythm('kick', [0,4,8,12]); drawRhythm('cymbal', [2,6,10,14]);
-                drawMelody('synth', [[0,2],[3,2],[6,4],[10,3],[14,2]]);
+                drawMelody('synth', [[0,5],[1,4],[2,3],[3,2],[4,1],[6,2],[8,5],[9,4],[10,3],[11,2],[12,1],[14,2]]);
             } else if (type === 'pop') {
-                drawRhythm('kick', [0, 8]); drawRhythm('cymbal', [4, 12]);
-                drawMelody('synth', [[0,4],[2,4],[4,3],[6,3],[8,2],[10,2],[12,1]]);
+                // Синкопированный ритм
+                drawRhythm('kick', [0, 3, 8, 11]); drawRhythm('cymbal', [4, 12]);
+                drawMelody('synth', [[0,3],[2,3],[4,2],[6,1],[8,4],[10,4],[12,2],[14,3]]);
             } else if (type === 'hiphop') {
-                drawRhythm('kick', [0, 10]); drawRhythm('cymbal', [4, 12]);
-                drawMelody('synth', [[0,6],[4,6],[8,5]]);
+                // Качающий медленный бит, редкая мелодия
+                drawRhythm('kick', [0, 9, 10]); drawRhythm('cymbal', [4, 12, 14, 15]);
+                drawMelody('synth', [[0,5],[0,6],[4,4],[4,5],[8,5],[8,6],[12,3],[12,4]]);
             } else if (type === 'jazz') {
+                // Свинг на тарелках, соло трубы
                 drawRhythm('cymbal', [0,3,4,7,8,11,12,15]);
-                drawMelody('trumpet', [[0,3],[4,2],[8,1],[12,4]]);
+                drawMelody('trumpet', [[0,3],[2,4],[4,2],[6,3],[8,1],[10,2],[12,0],[14,1]]);
             } else if (type === 'train') {
+                // Имитация стука колес и гудка
                 drawRhythm('kick', [0, 8]); drawRhythm('cymbal', [0,2,4,6,8,10,12,14]);
-                drawMelody('trumpet', [[0,1],[8,0]]);
+                drawMelody('trumpet', [[0,1],[0,3],[8,0],[8,2],[10,0],[10,2]]);
             } else if (type === 'lullaby') {
-                drawMelody('guitar', [[0,4],[2,3],[4,2],[6,1],[8,4],[10,3],[12,2],[14,1]]);
+                // Нежный гитарный перебор
+                drawMelody('guitar', [[0,4],[2,3],[4,2],[6,3],[8,5],[10,4],[12,3],[14,4]]);
             } else if (type === 'march') {
-                drawRhythm('kick', [0,4,8,12]); drawRhythm('cymbal', [0,2,4,6,8,10,12,14]);
-                drawMelody('trumpet', [[0,2],[2,2],[4,2],[8,3],[10,3],[12,3]]);
+                // Маршевые барабаны
+                drawRhythm('kick', [0,4,8,12]); drawRhythm('cymbal', [0,1,2,3,4,6,8,9,10,11,12,14]);
+                drawMelody('trumpet', [[0,2],[0,4],[4,2],[4,4],[8,3],[8,5],[10,3],[12,3],[12,5]]);
             } else if (type === 'alien') {
-                drawRhythm('cymbal', [0, 15]);
-                drawMelody('synth', [[0,0],[3,6],[6,1],[9,5],[12,2],[15,4]]);
+                // Космические звуки
+                drawRhythm('cymbal', [0, 7, 15]);
+                drawMelody('synth', [[0,0],[1,6],[3,1],[4,5],[7,2],[8,4],[11,3],[14,0]]);
             } else if (type === 'reggae') {
-                drawRhythm('kick', [0, 8]); drawRhythm('cymbal', [4, 12]);
-                drawMelody('guitar', [[2,4],[6,4],[10,4],[14,4]]);
+                // Регги слабая доля
+                drawRhythm('kick', [4, 12]); drawRhythm('cymbal', [2, 6, 10, 14]);
+                drawMelody('guitar', [[2,4],[2,2],[6,4],[6,2],[10,3],[10,1],[14,3],[14,1]]);
             }
             selectInstrument(prevInst);
         }
@@ -519,14 +586,13 @@
         }
 
         async function exportWav() {
-            // Проверяем, есть ли реальные файлы (без них экспортировать нечего)
             let hasFiles = Object.values(buffers).some(b => b !== null);
             if (!hasFiles) {
                 alert("Для сохранения музыки нужны загруженные аудиофайлы в папке /sounds/ !");
                 return;
             }
 
-            const totalDuration = 10; // Сохраняем 10 секунд
+            const totalDuration = 10;
             const sr = 44100;
             const offlineCtx = new OfflineAudioContext(2, sr * totalDuration, sr);
             
@@ -572,6 +638,7 @@
             const blob = audioBufferToWav(renderedBuffer);
             const link = document.createElement('a'); link.href = URL.createObjectURL(blob);
             link.download = 'ZveroBand_Hit.wav'; link.click();
+            document.getElementById('settingsMenu').style.display = 'none'; // Скрываем меню настроек если открыто
         }
 
         updateCarousel(); // Старт
