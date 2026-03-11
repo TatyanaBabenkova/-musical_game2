@@ -7,7 +7,7 @@
     <style>
         :root {
             --bg-color: #f1f5f9; --text-color: #1e293b; --card-bg: #ffffff;
-            --inactive-opacity: 0.3; --color-kick: #ef4444; --color-cymbal: #eab308;
+            --inactive-opacity: 0.2; --color-kick: #ef4444; --color-cymbal: #eab308;
             --color-guitar: #3b82f6; --color-trumpet: #a855f7; --color-synth: #10b981;
         }
         * { box-sizing: border-box; touch-action: manipulation; }
@@ -16,35 +16,34 @@
             background-color: var(--bg-color); color: var(--text-color);
             display: flex; flex-direction: column; height: 100dvh; overflow: hidden;
         }
-        #screen-start { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center; background: linear-gradient(180deg, #ffffff 0%, var(--bg-color) 100%); }
+        #screen-start { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center; background: white; }
         .start-header h1 { font-size: 32px; font-weight: 900; color: #3b82f6; margin: 0 0 10px 0; }
-        .start-header h2 { font-size: 16px; font-weight: 600; color: #64748b; margin: 0 0 15px 0; }
-        .start-header p { font-size: 12px; color: #94a3b8; max-width: 300px; margin: 0 auto 30px auto; }
-        .carousel { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
-        .carousel-btn { width: 45px; height: 45px; border-radius: 50%; border: none; background: var(--card-bg); box-shadow: 0 4px 10px rgba(0,0,0,0.05); font-size: 20px; font-weight: bold; color: #3b82f6; cursor: pointer; }
-        .hero-showcase { width: 160px; height: 160px; background: var(--card-bg); border-radius: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.08); display: flex; align-items: center; justify-content: center; border: 4px solid #e2e8f0; }
+        .hero-showcase { width: 180px; height: 180px; margin: 20px; background: #f8fafc; border-radius: 40px; border: 4px solid #e2e8f0; display: flex; align-items: center; justify-content: center; }
         .hero-showcase img { width: 90%; height: 90%; object-fit: contain; }
-        .btn-start { background: #3b82f6; color: white; border: none; padding: 16px 40px; border-radius: 30px; font-size: 20px; font-weight: 900; cursor: pointer; }
+        .btn-start { background: #3b82f6; color: white; border: none; padding: 15px 50px; border-radius: 30px; font-size: 20px; font-weight: bold; cursor: pointer; }
+        .nav-btn { background: none; border: 2px solid #3b82f6; color: #3b82f6; border-radius: 50%; width: 40px; height: 40px; font-size: 20px; cursor: pointer; }
 
         #screen-game { display: none; flex-direction: column; height: 100%; padding: 10px; }
-        .presets-carousel { display: flex; overflow-x: auto; gap: 8px; padding-bottom: 8px; flex: 0 0 auto; scrollbar-width: none; }
-        .preset-btn { flex: 0 0 auto; padding: 10px 16px; border-radius: 20px; background: var(--card-bg); border: 2px solid #e2e8f0; font-weight: 800; font-size: 12px; cursor: pointer; }
         .top-controls { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 8px; flex: 0 0 auto; }
-        .btn-play { background: #10b981; color: white; border: none; flex: 1; border-radius: 18px; font-weight: 900; font-size: 16px; cursor: pointer; }
+        .btn-play { background: #10b981; color: white; border: none; flex: 1; border-radius: 18px; font-weight: 900; font-size: 16px; height: 48px; cursor: pointer; }
         .btn-play.playing { background: #ef4444; }
         .btn-icon { width: 48px; height: 48px; background: #e2e8f0; border: none; border-radius: 18px; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
         
-        .grid-wrap { flex: 1 1 auto; display: flex; flex-direction: column; gap: 2px; overflow: auto; padding: 10px 0; }
-        .grid-section { display: flex; flex-direction: column; min-width: max-content; margin: 0 auto; }
+        .grid-wrap { flex: 1 1 auto; display: flex; flex-direction: column; justify-content: center; overflow: auto; align-items: center; }
+        .grid-section { display: flex; flex-direction: column; min-width: max-content; transition: opacity 0.3s; }
         .grid-row { display: flex; gap: 4px; margin-bottom: 2px; }
+        
         .cell { width: 40px; height: 32px; background: white; border-radius: 8px; border: 1px solid #e2e8f0; cursor: pointer; }
+        .cell-label { width: 40px; height: 32px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 900; color: #64748b; background: none; border: none; pointer-events: none; }
         .cell-rhythm { height: 45px; border: 2px dashed #cbd5e1; border-radius: 12px; }
         .playhead-col { background: #cbd5e1 !important; }
 
         .bottom-stage { background: white; padding: 12px; border-radius: 20px 20px 0 0; box-shadow: 0 -5px 25px rgba(0,0,0,0.05); padding-bottom: calc(12px + env(safe-area-inset-bottom)); }
         .instrument-palette { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
-        .inst-btn { flex: 0 0 calc(33.333% - 6px); max-width: 100px; padding: 8px 4px; border-radius: 16px; border: 3px solid transparent; font-size: 10px; font-weight: 900; background: var(--bg-color); display: flex; flex-direction: column; align-items: center; cursor: pointer; }
-        .inst-btn.selected { background: #ffffff !important; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-color: inherit; }
+        .inst-btn { flex: 0 0 calc(33.333% - 10px); max-width: 100px; padding: 8px 4px; border-radius: 16px; border: 3px solid transparent; background: #f1f5f9; display: flex; flex-direction: column; align-items: center; cursor: pointer; }
+        
+        /* Подсветка выбранного инструмента */
+        .inst-btn.selected { background: white !important; border-color: #3b82f6 !important; transform: scale(1.05); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
         .inst-img { width: 100%; aspect-ratio: 1/1; object-fit: contain; }
         
         .settings-menu { display: none; position: absolute; top: 120px; right: 10px; background: white; padding: 15px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); border: 2px solid #e2e8f0; z-index: 100; flex-direction: column; gap: 10px; }
@@ -57,19 +56,19 @@
         <div class="start-header">
             <h1>ЗвероБэнд 🎸</h1>
             <h2>Создай свой первый хит!</h2>
-            <p>Выбирай музыканта, расставляй ноты в клеточки и слушай результат.</p>
+            <p>Выбирай музыканта, расставляй ноты и слушай результат.</p>
         </div>
-        <div class="carousel">
-            <button class="carousel-btn" onclick="prevHero()">❮</button>
+        <div style="display:flex; align-items:center; gap:10px;">
+            <button class="nav-btn" onclick="changeHero(-1)">❮</button>
             <div class="hero-showcase"><img id="startImg" src=""></div>
-            <button class="carousel-btn" onclick="nextHero()">❯</button>
+            <button class="nav-btn" onclick="changeHero(1)">❯</button>
         </div>
-        <div class="hero-info"><h3 id="startName"></h3><p id="startDesc"></p></div>
+        <h2 id="heroName"></h2>
         <button class="btn-start" onclick="startGame()">НАЧАТЬ ИГРУ</button>
     </div>
 
     <div id="screen-game">
-        <div class="presets-carousel">
+        <div class="presets-carousel" style="display:flex; overflow-x:auto; gap:8px; padding-bottom:8px; scrollbar-width:none;">
             <button class="preset-btn" onclick="loadPreset('yolochka')">🎄 Ёлочка</button>
             <button class="preset-btn" onclick="loadPreset('kuznechik')">🦗 Кузнечик</button>
             <button class="preset-btn" onclick="loadPreset('rock')">🤘 Рок</button>
@@ -104,18 +103,16 @@
             kick: {id:'kick', type:'rhy', img:'drum', color:'#ef4444', file:'kick.wav'},
             cymbals: {id:'cymbals', type:'rhy', img:'cymbals', color:'#eab308', file:'cymbal.wav'}
         };
-        const RATES = [2.0, 1.68, 1.5, 1.33, 1.26, 1.12, 1.0];
+        const NOTES = ["СИ", "ЛЯ", "СОЛЬ", "ФА", "МИ", "РЕ", "ДО"];
+        const RATES = [2.0, 1.682, 1.498, 1.335, 1.26, 1.122, 1.0];
         let state = { hero: 0, inst: 'guitar', grid: {}, rhy: {}, playing: false, step: 0, tempo: 120, steps: 16 };
         let audioCtx = null, buffers = {}, activeNodes = {};
 
-        function updateCarousel() {
-            const h = HEROES[state.hero];
-            document.getElementById('startImg').src = `img/${h.id}_base.png`;
-            document.getElementById('startName').textContent = h.name;
-            document.getElementById('startDesc').textContent = h.desc;
+        function changeHero(dir) {
+            state.hero = (state.hero + dir + HEROES.length) % HEROES.length;
+            document.getElementById('startImg').src = `img/${HEROES[state.hero].id}_base.png`;
+            document.getElementById('heroName').innerText = HEROES[state.hero].name;
         }
-        function prevHero() { state.hero = (state.hero - 1 + HEROES.length) % HEROES.length; updateCarousel(); }
-        function nextHero() { state.hero = (state.hero + 1) % HEROES.length; updateCarousel(); }
 
         async function startGame() {
             document.getElementById('screen-start').style.display = 'none';
@@ -130,20 +127,29 @@
         function renderGame() {
             const mel = document.getElementById('melGrid'), rhy = document.getElementById('rhyGrid');
             mel.innerHTML = rhy.innerHTML = '';
+            
             for(let r=0; r<7; r++) {
                 const row = document.createElement('div'); row.className = 'grid-row';
+                // Первый столбец - названия нот
+                const label = document.createElement('div'); label.className = 'cell-label'; label.innerText = NOTES[r];
+                row.appendChild(label);
+                
                 for(let c=0; c<state.steps; c++) {
                     const cell = document.createElement('div'); cell.className = 'cell'; cell.id = `m-${c}-${r}`;
-                    cell.onclick = () => { if(!state.playing) toggleCell(c, r, 'mel'); };
+                    cell.onclick = () => { if(state.playing || INSTS[state.inst].type !== 'mel') return; toggleCell(c, r, 'mel'); };
                     if(state.grid[c] && state.grid[c][r]) cell.style.background = INSTS[state.grid[c][r]].color;
                     row.appendChild(cell);
                 }
                 mel.appendChild(row);
             }
+            
             const rRow = document.createElement('div'); rRow.className = 'grid-row';
+            const rLabel = document.createElement('div'); rLabel.className = 'cell-label'; rLabel.innerText = "Ритм";
+            rRow.appendChild(rLabel);
+            
             for(let c=0; c<state.steps; c++) {
                 const cell = document.createElement('div'); cell.className = 'cell cell-rhythm'; cell.id = `r-${c}`;
-                cell.onclick = () => { if(!state.playing) toggleCell(c, 0, 'rhy'); };
+                cell.onclick = () => { if(state.playing || INSTS[state.inst].type !== 'rhy') return; toggleCell(c, 0, 'rhy'); };
                 if(state.rhy[c]) cell.style.background = INSTS[state.rhy[c]].color;
                 rRow.appendChild(cell);
             }
@@ -156,7 +162,6 @@
             Object.keys(INSTS).forEach(k => {
                 const btn = document.createElement('button'); btn.className = 'inst-btn'; btn.id = `btn-${k}`;
                 if(state.inst === k && !state.playing) btn.classList.add('selected');
-                btn.style.borderColor = INSTS[k].color;
                 btn.onclick = () => selectInstrument(k);
                 btn.innerHTML = `<img class="inst-img" src="img/${HEROES[state.hero].id}_${INSTS[k].img}.png">`;
                 p.appendChild(btn);
@@ -167,8 +172,10 @@
             state.inst = id;
             document.querySelectorAll('.inst-btn').forEach(b => b.classList.remove('selected'));
             const active = document.getElementById(`btn-${id}`); if(active && !state.playing) active.classList.add('selected');
-            document.getElementById('melGrid').style.opacity = INSTS[id].type === 'mel' ? 1 : 0.3;
-            document.getElementById('rhyGrid').style.opacity = INSTS[id].type === 'rhy' ? 1 : 0.3;
+            
+            // Затемнение невыбранной части таблицы
+            document.getElementById('melGrid').style.opacity = INSTS[id].type === 'mel' ? 1 : var(--inactive-opacity);
+            document.getElementById('rhyGrid').style.opacity = INSTS[id].type === 'rhy' ? 1 : var(--inactive-opacity);
         }
 
         function toggleCell(c, r, type) {
@@ -186,9 +193,9 @@
         function playSound(k, r) {
             if(!buffers[k]) return;
             const t = audioCtx.currentTime;
-            if(activeNodes[k]) { try { activeNodes[k].stop(); } catch(e){} }
+            if(activeNodes[k]) { try { activeNodes[k].stop(t + 0.05); } catch(e){} }
             const s = audioCtx.createBufferSource(); s.buffer = buffers[k]; s.playbackRate.value = r;
-            const g = audioCtx.createGain(); g.gain.setValueAtTime(0.7, t); g.gain.exponentialRampToValueAtTime(0.01, t + 0.4);
+            const g = audioCtx.createGain(); g.gain.setValueAtTime(0.8, t); g.gain.exponentialRampToValueAtTime(0.01, t + 0.5);
             s.connect(g); g.connect(audioCtx.destination); s.start(); activeNodes[k] = s;
         }
 
@@ -197,8 +204,17 @@
         function togglePlay() {
             state.playing = !state.playing;
             const b = document.getElementById('btnPlay');
-            if(state.playing) { b.innerText = '■ СТОП'; b.classList.add('playing'); document.querySelectorAll('.inst-btn').forEach(x => x.classList.remove('selected')); loop(); }
-            else { b.innerText = '▶ ИГРАТЬ'; b.classList.remove('playing'); clearTimeout(state.timer); state.step = 0; document.querySelectorAll('.cell').forEach(x => x.classList.remove('playhead-col')); selectInstrument(state.inst); }
+            if(state.playing) { 
+                b.innerText = '■ СТОП'; b.classList.add('playing'); 
+                document.querySelectorAll('.inst-btn').forEach(x => x.classList.remove('selected'));
+                document.getElementById('melGrid').style.opacity = 1; document.getElementById('rhyGrid').style.opacity = 1;
+                loop(); 
+            } else { 
+                b.innerText = '▶ ИГРАТЬ'; b.classList.remove('playing'); 
+                clearTimeout(state.timer); state.step = 0; 
+                document.querySelectorAll('.cell').forEach(x => x.classList.remove('playhead-col'));
+                selectInstrument(state.inst); 
+            }
         }
 
         function loop() {
@@ -219,14 +235,15 @@
 
         function loadPreset(type) {
             clearGrid();
+            const draw = (c, r, inst, isRhy=false) => { if(!isRhy) { state.grid[c] = state.grid[c] || {}; state.grid[c][r] = inst; } else { state.rhy[c] = inst; } };
             if(type === 'yolochka') {
                 state.steps = 32; state.tempo = 100;
-                [0,4,8,12,16,20,24,28].forEach(c => state.rhy[c] = 'kick');
-                [[0,6],[2,1],[4,1],[6,2],[8,6],[10,6],[12,3],[14,3],[16,6],[18,1],[20,1],[22,2],[24,6],[28,4],[30,4]].forEach(n => { state.grid[n[0]] = state.grid[n[0]] || {}; state.grid[n[0]][n[1]] = 'synth'; });
+                [0,4,8,12,16,20,24,28].forEach(c => draw(c, 0, 'kick', true));
+                [[0,6],[2,4],[4,4],[6,2],[8,6],[12,3],[14,3],[16,6],[18,1],[20,1],[22,2],[24,6],[28,4],[30,4]].forEach(n => draw(n[0], n[1], 'synth'));
             } else if(type === 'kuznechik') {
-                state.steps = 32; state.tempo = 150;
-                for(let i=0; i<32; i+=2) state.rhy[i] = 'cymbals';
-                [[0,1],[2,4],[4,1],[6,4],[8,1],[10,2],[12,2],[16,2],[18,4],[20,2],[22,4],[24,2],[26,1],[28,1]].forEach(n => { state.grid[n[0]] = state.grid[n[0]] || {}; state.grid[n[0]][n[1]] = 'guitar'; });
+                state.steps = 32; state.tempo = 130;
+                [0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30].forEach(c => draw(c, 0, 'cymbals', true));
+                [[0,1],[2,4],[4,1],[6,4],[8,1],[10,2],[12,2],[16,2],[18,4],[20,2],[22,4],[24,2],[26,1],[28,1]].forEach(n => draw(n[0], n[1], 'guitar'));
             }
             renderGame(); changeTempo(state.tempo); document.getElementById('stepSelect').value = state.steps;
         }
@@ -261,8 +278,7 @@
             for (let i = 0; i < buffer.length; i++) for (let j = 0; j < n; j++) { let s = Math.max(-1, Math.min(1, buffer.getChannelData(j)[i])); view.setInt16(pos, s < 0 ? s * 0x8000 : s * 0x7FFF, true); pos += 2; }
             return new Blob([buffer2], {type: 'audio/wav'});
         }
-
-        updateCarousel();
+        changeHero(0);
     </script>
 </body>
 </html>
