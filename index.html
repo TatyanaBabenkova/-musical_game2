@@ -116,7 +116,6 @@
             display: flex; align-items: center; justify-content: center;
             box-shadow: 0 2px 4px rgba(0,0,0,0.02);
         }
-        /* Базовые (десктопные) размеры */
         .cell-melody { width: 40px; height: 32px; border: 1px solid #e2e8f0; }
         .cell-rhythm { width: 40px; height: 45px; border: 2px dashed #cbd5e1; border-radius: 12px; }
         
@@ -157,7 +156,7 @@
         }
         .inst-btn.bounce { animation: bounceAnim 0.2s ease; }
 
-        /* --- АДАПТИВНОСТЬ ДЛЯ ТЕЛЕФОНОВ --- */
+        /* --- АДАПТИВНОСТЬ --- */
         @media (max-width: 600px) {
             .inst-btn { flex: 0 0 calc(33.333% - 6px); max-width: 100px; padding: 4px; font-size: 9px; }
             .bottom-stage { padding: 8px; border-radius: 16px; }
@@ -169,7 +168,6 @@
             .cell-rhythm { height: 38px; width: 36px; border-radius: 10px; }
         }
 
-        /* Супер-низкие экраны телефонов */
         @media (max-height: 700px) {
             .cell-melody { height: 23px; width: 34px; }
             .cell-rhythm { height: 34px; width: 34px; }
@@ -177,7 +175,6 @@
             .presets-carousel { padding-bottom: 4px; }
         }
 
-        /* Адаптив для планшетов и ПК (горизонтально) */
         @media (min-width: 601px) {
             .instrument-palette { flex-wrap: nowrap; }
             .inst-btn { flex: 1; max-width: 130px; padding: 10px 5px; font-size: 12px;}
@@ -214,6 +211,8 @@
 
     <div id="screen-game">
         <div class="presets-carousel" id="presets-container">
+            <button class="preset-btn" onclick="loadPreset('yolochka')">🎄 Ёлочка</button>
+            <button class="preset-btn" onclick="loadPreset('kuznechik')">🦗 Кузнечик</button>
             <button class="preset-btn" onclick="loadPreset('rock')">🤘 Рок</button>
             <button class="preset-btn" onclick="loadPreset('dance')">🪩 Клуб</button>
             <button class="preset-btn" onclick="loadPreset('pop')">🌟 Попса</button>
@@ -221,9 +220,7 @@
             <button class="preset-btn" onclick="loadPreset('jazz')">🎷 Джаз</button>
             <button class="preset-btn" onclick="loadPreset('train')">🚂 Поезд</button>
             <button class="preset-btn" onclick="loadPreset('lullaby')">🌙 Сон</button>
-            <button class="preset-btn" onclick="loadPreset('march')">🥁 Марш</button>
             <button class="preset-btn" onclick="loadPreset('alien')">🛸 НЛО</button>
-            <button class="preset-btn" onclick="loadPreset('reggae')">🌴 Регги</button>
         </div>
 
         <div class="top-controls">
@@ -259,7 +256,6 @@
     </div>
 
     <script>
-        // --- ДАННЫЕ И НАСТРОЙКИ ---
         const HEROES = [
             { id: 'cat', name: "Кошечка", icon: "🐱", desc: "Поп-звезда! Яркая и звонкая." },
             { id: 'dog', name: "Щенок", icon: "🐶", desc: "Панк-рокер. Любит драйв!" },
@@ -292,16 +288,14 @@
 
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         const buffers = {};
+        const activeNodes = {}; // Глушитель звуков (choke group)
 
-        // --- ЛОГИКА ЭКРАНА 1 ---
         function updateCarousel() {
             const h = HEROES[state.heroIdx];
             document.getElementById('startName').textContent = h.name;
             document.getElementById('startDesc').textContent = h.desc;
-            
             const imgEl = document.getElementById('startImg');
             const emojiEl = document.getElementById('startEmoji');
-            
             imgEl.style.display = 'block';
             emojiEl.style.display = 'none';
             emojiEl.textContent = h.icon;
@@ -311,11 +305,9 @@
         function prevHero() { state.heroIdx = (state.heroIdx - 1 + HEROES.length) % HEROES.length; updateCarousel(); }
         function nextHero() { state.heroIdx = (state.heroIdx + 1) % HEROES.length; updateCarousel(); }
 
-        // --- ИНИЦИАЛИЗАЦИЯ ИГРЫ ---
         async function startGame() {
             document.getElementById('screen-start').style.display = 'none';
             document.getElementById('screen-game').style.display = 'flex';
-            
             if(audioCtx.state === 'suspended') audioCtx.resume();
             
             for (let key in INSTRUMENTS) {
@@ -325,7 +317,6 @@
                     else buffers[key] = null;
                 } catch(e) { buffers[key] = null; }
             }
-
             buildUI();
             selectInstrument('guitar'); 
         }
@@ -374,11 +365,11 @@
             }
         }
 
-        // --- ЛОГИКА ИНТЕРФЕЙСА ---
         function selectInstrument(instId) {
             state.instrument = instId;
+            if(!instId) return;
+
             const inst = INSTRUMENTS[instId];
-            
             document.querySelectorAll('.inst-btn').forEach(b => {
                 b.classList.remove('selected'); 
                 b.style.background = 'var(--bg-color)'; 
@@ -396,15 +387,16 @@
             const rhySec = document.getElementById('rhythm-section');
             
             if (inst.type === 'melody') {
-                melSec.style.opacity = '1'; melSec.style.pointerEvents = 'auto';
-                rhySec.style.opacity = 'var(--inactive-opacity)'; rhySec.style.pointerEvents = 'none';
+                melSec.style.opacity = '1'; 
+                rhySec.style.opacity = 'var(--inactive-opacity)';
             } else {
-                melSec.style.opacity = 'var(--inactive-opacity)'; melSec.style.pointerEvents = 'none';
-                rhySec.style.opacity = '1'; rhySec.style.pointerEvents = 'auto';
+                melSec.style.opacity = 'var(--inactive-opacity)';
+                rhySec.style.opacity = '1'; 
             }
         }
 
         function toggleMelody(col, row) {
+            if(!state.instrument) return;
             if (!state.grid[col]) state.grid[col] = {};
             const inst = INSTRUMENTS[state.instrument];
             const cell = document.getElementById(`cell-m-${col}-${row}`);
@@ -419,6 +411,7 @@
         }
 
         function toggleRhythm(col) {
+            if(!state.instrument) return;
             const inst = INSTRUMENTS[state.instrument];
             const cell = document.getElementById(`cell-r-${col}`);
             
@@ -440,16 +433,12 @@
             }
         }
 
-        // --- НАСТРОЙКИ И ТЕМП ---
         function toggleSettings() {
             const menu = document.getElementById('settingsMenu');
             menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
         }
 
-        function changeSteps(val) {
-            STEPS = parseInt(val);
-            buildUI();
-        }
+        function changeSteps(val) { STEPS = parseInt(val); buildUI(); }
 
         function changeTempo(val) {
             state.tempo = parseInt(val);
@@ -457,20 +446,30 @@
             document.getElementById('tempoSlider').value = state.tempo;
         }
 
-        // --- ВОСПРОИЗВЕДЕНИЕ С ЗАТУХАНИЕМ (ENVELOPE) ---
+        // УМНЫЙ ПЛЕЕР С ГЛУШИТЕЛЕМ ХВОСТОВ (Монофония)
         function playSound(instId, rate) {
             const buf = buffers[instId];
             const t = audioCtx.currentTime;
+
+            // Обрываем предыдущую ноту ЭТОГО ЖЕ инструмента, чтобы не было гула и каши
+            if (activeNodes[instId]) {
+                try {
+                    activeNodes[instId].gain.cancelScheduledValues(t);
+                    activeNodes[instId].gain.setValueAtTime(activeNodes[instId].gain.value, t);
+                    activeNodes[instId].gain.linearRampToValueAtTime(0.01, t + 0.05); // Плавное, но быстрое затухание
+                } catch(e) {}
+            }
+
             if (buf) {
                 const source = audioCtx.createBufferSource();
-                const gainNode = audioCtx.createGain(); // Узел громкости для затухания
-                
+                const gainNode = audioCtx.createGain();
+                activeNodes[instId] = gainNode; // Запоминаем текущую ноту
+
                 source.buffer = buf; 
                 source.playbackRate.value = rate;
                 
-                // Делаем так, чтобы длинные звуки затухали, не создавая гулкую кашу
-                gainNode.gain.setValueAtTime(0.8, t); 
-                gainNode.gain.setTargetAtTime(0.01, t + 0.3, 0.1); // Плавное затухание через 0.3 сек
+                gainNode.gain.setValueAtTime(0.8, t);
+                gainNode.gain.setTargetAtTime(0.01, t + 0.4, 0.1); 
 
                 source.connect(gainNode); 
                 gainNode.connect(audioCtx.destination); 
@@ -478,7 +477,6 @@
             } else {
                 const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
                 osc.connect(gain); gain.connect(audioCtx.destination);
-                
                 if(instId === 'kick') {
                     osc.type = 'sine'; osc.frequency.setValueAtTime(150, t); osc.frequency.exponentialRampToValueAtTime(0.01, t + 0.1);
                     gain.gain.setValueAtTime(1, t); gain.gain.exponentialRampToValueAtTime(0.01, t + 0.1);
@@ -502,18 +500,37 @@
             const btn = document.getElementById('btnPlay');
             if(state.isPlaying) {
                 btn.textContent = '■ СТОП'; btn.classList.add('playing');
+                
+                // Убираем визуальное выделение кисти при проигрывании
+                document.querySelectorAll('.inst-btn').forEach(b => {
+                    b.classList.remove('selected'); 
+                    b.style.background = 'var(--bg-color)'; 
+                    b.style.borderColor = 'transparent';
+                });
+                state.instrument = null; // Отключаем рисование
+                
+                // Подсвечиваем всю сетку
+                document.getElementById('melody-section').style.opacity = '1';
+                document.getElementById('rhythm-section').style.opacity = '1';
+                document.getElementById('melody-section').style.pointerEvents = 'none';
+                document.getElementById('rhythm-section').style.pointerEvents = 'none';
+
                 if(audioCtx.state === 'suspended') audioCtx.resume();
                 playLoop();
             } else {
                 btn.textContent = '▶ ИГРАТЬ'; btn.classList.remove('playing');
                 clearTimeout(state.timer); state.currentStep = 0; updatePlayhead();
+                
+                // Возвращаем сетку в рабочее состояние и выбираем первый инструмент
+                document.getElementById('melody-section').style.pointerEvents = 'auto';
+                document.getElementById('rhythm-section').style.pointerEvents = 'auto';
+                selectInstrument('guitar');
             }
         }
 
         function playLoop() {
             if(!state.isPlaying) return;
             updatePlayhead();
-            
             let instrumentsToBounce = new Set();
 
             if (state.grid[state.currentStep]) {
@@ -530,7 +547,6 @@
             }
 
             instrumentsToBounce.forEach(id => bounceHero(id));
-
             state.currentStep = (state.currentStep + 1) % STEPS;
             state.timer = setTimeout(playLoop, (60000 / state.tempo) / 4);
         }
@@ -547,7 +563,7 @@
             }
         }
 
-        // --- УЛУЧШЕННЫЕ, ЧИСТЫЕ ПРЕСЕТЫ С РАЗНЫМ ТЕМПОМ ---
+        // --- НОВЫЕ ПРЕСЕТЫ: СТРОГО ОДНОГОЛОСЫЕ И ЧИСТЫЕ ---
         function clearGrid() {
             state.grid = {}; state.rhythmGrid = {};
             document.querySelectorAll('.cell-active').forEach(c => { c.classList.remove('cell-active'); c.style.background = ''; });
@@ -555,67 +571,80 @@
 
         function loadPreset(type) {
             clearGrid();
-            let prevInst = state.instrument; 
-            
-            const drawMelody = (inst, arr) => { selectInstrument(inst); arr.forEach(pos => toggleMelody(pos[0], pos[1])); }
-            const drawRhythm = (inst, arr) => { selectInstrument(inst); arr.forEach(col => toggleRhythm(col)); }
+            let prevInst = state.instrument || 'guitar'; 
 
-            if(type === 'rock') {
+            if (type === 'yolochka' || type === 'kuznechik') {
+                STEPS = 32;
+            } else {
+                STEPS = 16;
+            }
+            document.getElementById('stepSelect').value = STEPS;
+            buildUI();
+            
+            // Вспомогательные функции для прямой отрисовки
+            const drawMelody = (inst, arr) => { const color = INSTRUMENTS[inst].color; arr.forEach(pos => { state.grid[pos[0]] = state.grid[pos[0]] || {}; state.grid[pos[0]][pos[1]] = { instId: inst, color: color }; const cell = document.getElementById(`cell-m-${pos[0]}-${pos[1]}`); if(cell){cell.style.background = color; cell.classList.add('cell-active');} }); }
+            const drawRhythm = (inst, arr) => { const color = INSTRUMENTS[inst].color; arr.forEach(col => { state.rhythmGrid[col] = { instId: inst, color: color }; const cell = document.getElementById(`cell-r-${col}`); if(cell){cell.style.background = color; cell.classList.add('cell-active');} }); }
+
+            if(type === 'yolochka') {
+                changeTempo(120);
+                drawRhythm('kick', [0, 8, 16, 24]); 
+                drawRhythm('cymbal', [4, 12, 20, 28]);
+                // В лесу родилась ёлочка (без аккордов!)
+                drawMelody('synth', [[0,2], [2,3], [4,3], [6,4], [8,2], [12,2], [16,2], [18,3], [20,3], [22,4], [24,5], [28,5]]);
+            } 
+            else if (type === 'kuznechik') {
+                changeTempo(130);
+                drawRhythm('kick', [0, 8, 16, 24]); 
+                drawRhythm('cymbal', [4, 12, 20, 28]);
+                // В траве сидел кузнечик (без аккордов!)
+                drawMelody('guitar', [[0,1], [2,3], [4,1], [6,3], [8,1], [10,2], [12,2], [16,2], [18,3], [20,2], [22,3], [24,2], [26,1], [28,1]]);
+            }
+            else if (type === 'rock') {
                 changeTempo(130);
                 drawRhythm('kick', [0, 6, 8, 14]); 
                 drawRhythm('cymbal', [4, 12]);
-                // Пауэр-аккорды (по 2 ноты, чтобы не было "грязи")
-                drawMelody('guitar', [[0,6],[0,3], [2,5],[2,2], [4,4],[4,1], [8,6],[8,3], [10,5],[10,2], [12,4],[12,1]]);
+                // Жесткий гитарный риф по одной ноте
+                drawMelody('guitar', [[0,5], [2,5], [4,4], [6,4], [8,2], [10,2], [12,1], [14,1]]);
             } 
             else if (type === 'dance') {
                 changeTempo(128);
                 drawRhythm('kick', [0, 4, 8, 12]); 
                 drawRhythm('cymbal', [2, 6, 10, 14]);
-                // Быстрый перебор-арпеджио 
-                drawMelody('synth', [[0,6], [1,4], [2,3], [3,2], [4,5], [5,3], [6,2], [7,1], [8,6], [9,4], [10,3], [11,2], [12,5], [13,3], [14,2], [15,1]]);
+                // Быстрый перебор по одной ноте
+                drawMelody('synth', [[0,6], [2,2], [4,6], [6,1], [8,6], [10,2], [12,6], [14,0]]);
             } 
             else if (type === 'pop') {
                 changeTempo(115);
                 drawRhythm('kick', [0, 3, 8, 11]); 
                 drawRhythm('cymbal', [4, 12]);
-                drawMelody('synth', [[0,5],[0,3], [2,4], [4,3],[4,1], [6,2], [8,4],[8,2], [10,3], [12,2],[12,0], [14,1]]);
-                drawMelody('guitar', [[2,1], [6,0], [10,1], [14,2]]);
+                drawMelody('synth', [[0,5], [2,4], [4,3], [6,2], [8,4], [10,3], [12,2], [14,1]]);
+                drawMelody('guitar', [[2,1], [6,0], [10,1], [14,2]]); // На пустых местах
             } 
             else if (type === 'hiphop') {
-                changeTempo(90); // Качающий медленный ритм
+                changeTempo(90); 
                 drawRhythm('kick', [0, 9, 10]); 
-                drawRhythm('cymbal', [0, 2, 4, 6, 8, 10, 12, 14, 15]);
-                // Глубокий редкий бас и вставки трубы
-                drawMelody('synth', [[0,6], [4,6], [8,5], [12,5]]);
-                drawMelody('trumpet', [[4,2], [6,3], [12,1], [14,2]]);
+                drawRhythm('cymbal', [0, 2, 4, 6, 8, 10, 12, 14]);
+                drawMelody('synth', [[0,6], [8,5]]);
+                drawMelody('trumpet', [[4,2], [12,1]]);
             } 
             else if (type === 'jazz') {
                 changeTempo(105);
                 drawRhythm('kick', [0, 8]); 
-                drawRhythm('cymbal', [0, 3, 4, 7, 8, 11, 12, 15]); // Свинг
+                drawRhythm('cymbal', [0, 3, 4, 7, 8, 11, 12, 15]); 
                 drawMelody('guitar', [[0,6], [2,5], [4,4], [6,3], [8,2], [10,3], [12,4], [14,5]]);
-                drawMelody('trumpet', [[4,1], [7,2], [12,0], [15,1]]);
+                drawMelody('trumpet', [[4,1], [12,0]]);
             } 
             else if (type === 'train') {
                 changeTempo(120);
                 drawRhythm('kick', [0, 4, 8, 12]); 
                 drawRhythm('cymbal', [2, 6, 10, 14]);
-                // Стук колес
                 drawMelody('guitar', [[0,5], [1,6], [2,5], [3,6], [4,5], [5,6], [6,5], [7,6], [8,5], [9,6], [10,5], [11,6], [12,5], [13,6], [14,5], [15,6]]);
-                drawMelody('trumpet', [[0,1],[0,2], [2,1],[2,2], [8,0],[8,1]]);
+                drawMelody('trumpet', [[0,1], [2,1], [8,0], [10,0]]);
             } 
             else if (type === 'lullaby') {
-                changeTempo(70); // ОЧЕНЬ медленно и плавно
-                drawRhythm('cymbal', [0, 4, 8, 12]); // Мягкие тики
-                // Плавный спуск нот
-                drawMelody('guitar', [[0,1], [2,2], [4,3], [6,4], [8,2], [10,3], [12,4], [14,5]]);
-                drawMelody('synth', [[0,5], [4,4], [8,3], [12,4]]);
-            } 
-            else if (type === 'march') {
-                changeTempo(110);
-                drawRhythm('kick', [0, 4, 8, 12]); 
-                drawRhythm('cymbal', [0, 2, 4, 5, 6, 8, 10, 12, 13, 14]);
-                drawMelody('trumpet', [[0,3],[0,5], [2,3],[2,5], [4,3],[4,5], [6,2],[6,4], [8,1],[8,3], [10,1],[10,3], [12,1],[12,3], [14,0],[14,2]]);
+                changeTempo(70); 
+                drawRhythm('cymbal', [0, 4, 8, 12]); 
+                drawMelody('synth', [[0,2], [2,3], [4,4], [6,5], [8,1], [10,2], [12,3], [14,4]]);
             } 
             else if (type === 'alien') {
                 changeTempo(125);
@@ -624,17 +653,10 @@
                 drawMelody('synth', [[0,0], [1,1], [2,2], [3,3], [4,4], [5,5], [6,6], [7,5], [8,4], [9,3], [10,2], [11,1], [12,0], [13,1], [14,2], [15,3]]);
                 drawMelody('guitar', [[0,2], [4,1], [8,0], [12,1]]);
             } 
-            else if (type === 'reggae') {
-                changeTempo(80); // Медленный раскач
-                drawRhythm('kick', [8]); // Удар только на слабую
-                drawRhythm('cymbal', [0, 4, 12]);
-                drawMelody('guitar', [[2,4],[2,2], [6,4],[6,2], [10,3],[10,1], [14,3],[14,1]]);
-                drawMelody('synth', [[0,6], [3,5], [8,4], [11,5]]);
-            }
+            
             selectInstrument(prevInst);
         }
 
-        // --- СОХРАНЕНИЕ В WAV ---
         function audioBufferToWav(buffer) {
             let numChannels = buffer.numberOfChannels, sampleRate = buffer.sampleRate;
             let result = new Int16Array(buffer.length * numChannels);
@@ -683,7 +705,7 @@
                             let instId = state.grid[step][r].instId;
                             if (buffers[instId]) {
                                 let source = offlineCtx.createBufferSource();
-                                let gainNode = offlineCtx.createGain(); // Затухание для экспорта тоже
+                                let gainNode = offlineCtx.createGain(); 
                                 source.buffer = buffers[instId];
                                 source.playbackRate.value = RATES[r];
                                 gainNode.gain.setValueAtTime(0.8, start);
