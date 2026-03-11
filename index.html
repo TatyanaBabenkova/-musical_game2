@@ -17,70 +17,89 @@
             display: flex; flex-direction: column; height: 100dvh; overflow: hidden;
         }
         
-        /* ЭКРАН 1: БОЛЬШИЕ КАРТИНКИ */
-        #screen-start { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center; background: white; }
+        /* ЭКРАН 1: ВОССТАНОВЛЕНО ПОЛНОСТЬЮ */
+        #screen-start { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center; background: white; padding: 20px; }
+        .start-header h1 { font-size: 32px; font-weight: 900; color: #3b82f6; margin: 0 0 5px 0; }
+        .start-header h2 { font-size: 18px; font-weight: 600; color: #64748b; margin: 0 0 10px 0; }
+        .start-header p { font-size: 14px; color: #94a3b8; max-width: 350px; margin: 0 auto 20px auto; line-height: 1.4; }
         .hero-showcase { 
-            width: 280px; height: 280px; margin: 20px; background: #f8fafc; 
-            border-radius: 50px; border: 4px solid #e2e8f0; display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+            width: 250px; height: 250px; margin: 15px; background: #f8fafc; 
+            border-radius: 45px; border: 4px solid #e2e8f0; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.06);
         }
-        .hero-showcase img { width: 95%; height: 95%; object-fit: contain; }
-        .btn-start { background: #3b82f6; color: white; border: none; padding: 18px 60px; border-radius: 40px; font-size: 24px; font-weight: 900; cursor: pointer; box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4); }
-        .carousel-wrap { display: flex; align-items: center; gap: 20px; }
-        .nav-btn { background: #f1f5f9; border: none; border-radius: 50%; width: 50px; height: 50px; font-size: 24px; color: #3b82f6; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .hero-showcase img { width: 90%; height: 90%; object-fit: contain; }
+        .btn-start { background: #3b82f6; color: white; border: none; padding: 16px 50px; border-radius: 35px; font-size: 22px; font-weight: 900; cursor: pointer; box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3); }
+        .carousel-wrap { display: flex; align-items: center; gap: 15px; }
+        .nav-btn { background: #f1f5f9; border: none; border-radius: 50%; width: 45px; height: 45px; font-size: 22px; color: #3b82f6; cursor: pointer; }
 
-        /* ЭКРАН 2 */
+        /* ЭКРАН 2: ИСПРАВЛЕННАЯ СЕТКА */
         #screen-game { display: none; flex-direction: column; height: 100%; padding: 10px; }
-        .top-controls { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
-        .btn-play { background: #10b981; color: white; border: none; flex: 1; border-radius: 20px; font-weight: 900; font-size: 18px; cursor: pointer; }
+        .top-controls { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 8px; flex-shrink: 0; }
+        .btn-play { background: #10b981; color: white; border: none; flex: 1; border-radius: 18px; font-weight: 900; font-size: 16px; height: 46px; cursor: pointer; }
         .btn-play.playing { background: #ef4444; }
-        .btn-icon { width: 50px; height: 50px; background: #e2e8f0; border: none; border-radius: 15px; font-size: 22px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .btn-icon { width: 46px; height: 46px; background: #e2e8f0; border: none; border-radius: 15px; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 
-        .grid-wrap { flex: 1; display: flex; flex-direction: column; justify-content: center; overflow: auto; padding: 10px 0; }
-        .grid-section { display: flex; flex-direction: column; align-items: center; }
-        .grid-row { display: flex; gap: 4px; margin-bottom: 2px; }
-        .cell { width: 42px; height: 34px; background: white; border-radius: 8px; border: 1px solid #e2e8f0; cursor: pointer; }
-        .cell-label { width: 50px; height: 34px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 900; color: #64748b; background: #f8fafc; border-radius: 8px; margin-right: 4px; }
-        .cell-rhythm { height: 48px; border: 2px dashed #cbd5e1; border-radius: 14px; }
-        .playhead-col { background: #cbd5e1 !important; }
+        .grid-wrap { 
+            flex: 1; display: flex; flex-direction: column; overflow: auto; 
+            padding: 5px 0; border-radius: 10px; background: rgba(255,255,255,0.3);
+        }
+        .grid-section { display: flex; flex-direction: column; min-width: max-content; padding-left: 5px; }
+        .grid-row { display: flex; gap: 3px; margin-bottom: 2px; }
+        
+        /* ФИКСИРОВАННЫЕ НАЗВАНИЯ НОТ */
+        .cell-label { 
+            position: sticky; left: 0; z-index: 5;
+            width: 45px; height: 32px; display: flex; align-items: center; justify-content: center; 
+            font-size: 10px; font-weight: 900; color: #64748b; background: #f1f5f9; 
+            border-radius: 6px; margin-right: 5px; border: 1px solid #e2e8f0;
+        }
+        
+        .cell { width: 40px; height: 32px; background: white; border-radius: 6px; border: 1px solid #e2e8f0; cursor: pointer; flex-shrink: 0; }
+        .cell-rhythm { height: 42px; border: 2px dashed #cbd5e1; border-radius: 10px; }
+        .playhead-col { background: #cbd5e1 !important; border-color: #94a3b8; }
 
-        /* НИЖНЯЯ ПАНЕЛЬ С КРУПНЫМИ ЗВЕРЯТАМИ */
-        .bottom-stage { background: white; padding: 15px; border-radius: 30px 30px 0 0; box-shadow: 0 -5px 25px rgba(0,0,0,0.05); }
-        .instrument-palette { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+        /* ПАНЕЛЬ ИНСТРУМЕНТОВ */
+        .bottom-stage { background: white; padding: 12px; border-radius: 25px 25px 0 0; box-shadow: 0 -5px 20px rgba(0,0,0,0.05); flex-shrink: 0; }
+        .instrument-palette { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
         .inst-btn { 
-            flex: 0 0 calc(33% - 12px); max-width: 140px; border: 3px solid transparent; 
-            background: #f1f5f9; border-radius: 24px; padding: 10px; display: flex; 
+            flex: 0 0 calc(33% - 10px); max-width: 120px; border: 3px solid transparent; 
+            background: #f1f5f9; border-radius: 20px; padding: 8px; display: flex; 
             flex-direction: column; align-items: center; cursor: pointer; transition: 0.2s;
         }
-        .inst-btn.selected { background: white !important; border-color: #3b82f6 !important; transform: scale(1.08); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
-        .inst-img { width: 70px; height: 70px; object-fit: contain; }
+        .inst-btn.selected { background: white !important; border-color: #3b82f6 !important; transform: scale(1.05); }
+        .inst-img { width: 60px; height: 60px; object-fit: contain; }
         
         @media (max-width: 600px) {
             .hero-showcase { width: 200px; height: 200px; }
-            .inst-img { width: 50px; height: 50px; }
-            .cell { width: 36px; height: 28px; }
-            .cell-label { width: 38px; font-size: 9px; }
+            .inst-img { width: 45px; height: 45px; }
+            .cell { width: 34px; height: 28px; }
+            .cell-label { width: 36px; font-size: 8px; }
+            .start-header h1 { font-size: 26px; }
         }
         .settings-menu { display: none; position: absolute; top: 120px; right: 10px; background: white; padding: 15px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); border: 2px solid #e2e8f0; z-index: 100; flex-direction: column; gap: 10px; }
-        @keyframes bounce { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15) translateY(-8px); } }
-        .bounce { animation: bounce 0.25s ease; }
+        @keyframes bounce { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1) translateY(-6px); } }
+        .bounce { animation: bounce 0.2s ease; }
     </style>
 </head>
 <body>
     <div id="screen-start">
-        <h1>ЗвероБэнд 🎸</h1>
+        <div class="start-header">
+            <h1>ЗвероБэнд 🎸</h1>
+            <h2>Создай свой первый хит!</h2>
+            <p>Выбирай музыканта, расставляй ноты в клеточки и слушай результат.</p>
+        </div>
         <div class="carousel-wrap">
             <button class="nav-btn" onclick="changeHero(-1)">❮</button>
             <div class="hero-showcase"><img id="startImg" src=""></div>
             <button class="nav-btn" onclick="changeHero(1)">❯</button>
         </div>
-        <h2 id="heroName"></h2>
-        <p id="heroDesc" style="color:#64748b; margin-top:-10px; margin-bottom:20px;"></p>
+        <h2 id="heroName" style="margin: 5px 0;"></h2>
+        <p id="heroDesc" style="color:#64748b; margin-bottom:15px;"></p>
         <button class="btn-start" onclick="startGame()">НАЧАТЬ ИГРУ</button>
     </div>
 
     <div id="screen-game">
-        <div class="presets-carousel" style="display:flex; overflow-x:auto; gap:8px; padding-bottom:10px; scrollbar-width:none;">
+        <div class="presets-carousel" style="display:flex; overflow-x:auto; gap:8px; padding-bottom:8px; scrollbar-width:none;">
             <button class="preset-btn" onclick="loadPreset('yolochka')">🎄 Ёлочка</button>
             <button class="preset-btn" onclick="loadPreset('kuznechik')">🦗 Кузнечик</button>
             <button class="preset-btn" onclick="loadPreset('rock')">🤘 Рок</button>
@@ -99,7 +118,7 @@
         </div>
         <div class="grid-wrap">
             <div id="melGrid" class="grid-section"></div>
-            <div style="height:6px; background:#cbd5e1; width:100%; max-width:800px; margin:8px 0; border-radius:4px;"></div>
+            <div style="height:4px; background:#cbd5e1; min-width:100%; margin:6px 0; border-radius:2px;"></div>
             <div id="rhyGrid" class="grid-section"></div>
         </div>
         <div class="bottom-stage"><div id="palette" class="instrument-palette"></div></div>
@@ -204,7 +223,7 @@
         function playSound(k, r) {
             if(!buffers[k]) return;
             const t = audioCtx.currentTime;
-            if(activeNodes[k]) { try { activeNodes[k].stop(t+0.05); } catch(e){} }
+            if(activeNodes[k]) { try { activeNodes[k].stop(); } catch(e){} }
             const s = audioCtx.createBufferSource(); s.buffer = buffers[k]; s.playbackRate.value = r;
             const g = audioCtx.createGain(); g.gain.setValueAtTime(0.7, t); g.gain.exponentialRampToValueAtTime(0.01, t + 0.4);
             s.connect(g); g.connect(audioCtx.destination); s.start(); activeNodes[k] = s;
@@ -215,8 +234,17 @@
         function togglePlay() {
             state.playing = !state.playing;
             const b = document.getElementById('btnPlay');
-            if(state.playing) { b.innerText = '■ СТОП'; b.classList.add('playing'); document.querySelectorAll('.inst-btn').forEach(x => x.classList.remove('selected')); loop(); }
-            else { b.innerText = '▶ ИГРАТЬ'; b.classList.remove('playing'); clearTimeout(state.timer); state.step = 0; document.querySelectorAll('.cell').forEach(x => x.classList.remove('playhead-col')); selectInstrument(state.inst); }
+            if(state.playing) { 
+                b.innerText = '■ СТОП'; b.classList.add('playing'); 
+                document.querySelectorAll('.inst-btn').forEach(x => x.classList.remove('selected'));
+                document.getElementById('melGrid').style.opacity = 1; document.getElementById('rhyGrid').style.opacity = 1;
+                loop(); 
+            } else { 
+                b.innerText = '▶ ИГРАТЬ'; b.classList.remove('playing'); 
+                clearTimeout(state.timer); state.step = 0; 
+                document.querySelectorAll('.cell').forEach(x => x.classList.remove('playhead-col'));
+                selectInstrument(state.inst || 'guitar'); 
+            }
         }
 
         function loop() {
@@ -240,7 +268,7 @@
             if(type === 'yolochka') {
                 state.steps = 32; state.tempo = 100;
                 [0,4,8,12,16,20,24,28].forEach(c => state.rhy[c] = 'kick');
-                // СОЛЬ(2), МИ(4), МИ(4), ФА(3), МИ(4), РЕ(5), ДО(6), СОЛЬ(2)
+                // СОЛЬ(2), МИ(4), МИ(4), ФА(3), МИ(4), РЕ(5), ДО(6), СОЛЬ(2) - Ёлочка
                 [[0,2],[2,4],[4,4],[6,3],[8,4],[10,5],[12,6],[14,2],[16,2],[18,1],[20,1],[22,3],[24,5],[26,4]].forEach(n => { state.grid[n[0]] = state.grid[n[0]] || {}; state.grid[n[0]][n[1]] = 'synth'; });
             } else if(type === 'kuznechik') {
                 state.steps = 32; state.tempo = 150;
@@ -251,7 +279,7 @@
         }
 
         async function exportWav() {
-            if(Object.keys(buffers).length === 0) { alert("Звуки еще загружаются..."); return; }
+            if(!audioCtx) { alert("Сначала запустите игру!"); return; }
             const dur = 10, sr = 44100;
             const offline = new (window.OfflineAudioContext || window.webkitOfflineAudioContext)(2, sr * dur, sr);
             const stepDur = (60 / state.tempo) / 4;
@@ -262,7 +290,7 @@
                     const id = state.grid[cur][r]; if(buffers[id]) { const src = offline.createBufferSource(); src.buffer = buffers[id]; src.playbackRate.value = RATES[r]; src.connect(offline.destination); src.start(time); }
                 });
                 if(state.rhy[cur]) {
-                    const id = state.rhy[cur]; if(buffers[id]) { const src = offline.createBufferSource(); src.buffer = buffers[id]; src.connect(offline.destination); src.start(time); }
+                    const id = state.rhy[cur]; if(buffers[id]) { const src = offline.createBufferSource(); src.buffer = buffers[id]; src.playbackRate.value = 1; src.connect(offline.destination); src.start(time); }
                 }
             }
             const rendered = await offline.startRendering();
@@ -281,6 +309,7 @@
             for (let i = 0; i < buffer.length; i++) for (let j = 0; j < n; j++) { let s = Math.max(-1, Math.min(1, buffer.getChannelData(j)[i])); view.setInt16(pos, s < 0 ? s * 0x8000 : s * 0x7FFF, true); pos += 2; }
             return new Blob([buffer2], {type: 'audio/wav'});
         }
+
         changeHero(0);
     </script>
 </body>
