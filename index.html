@@ -16,43 +16,37 @@
             background-color: var(--bg-color); color: var(--text-color);
             display: flex; flex-direction: column; height: 100dvh; overflow: hidden;
         }
-        /* ЭКРАН 1: ВОССТАНОВЛЕН ИЗ ВЕРСИИ 76 */
-        #screen-start {
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            height: 100%; padding: 20px; text-align: center; background: linear-gradient(180deg, #ffffff 0%, var(--bg-color) 100%);
-        }
-        .start-header h1 { font-size: 32px; font-weight: 900; color: #3b82f6; margin: 0 0 10px 0; letter-spacing: -1px; }
+        #screen-start { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center; background: linear-gradient(180deg, #ffffff 0%, var(--bg-color) 100%); }
+        .start-header h1 { font-size: 32px; font-weight: 900; color: #3b82f6; margin: 0 0 10px 0; }
         .start-header h2 { font-size: 16px; font-weight: 600; color: #64748b; margin: 0 0 15px 0; }
-        .start-header p { font-size: 12px; color: #94a3b8; max-width: 300px; margin: 0 auto 30px auto; line-height: 1.4; }
+        .start-header p { font-size: 12px; color: #94a3b8; max-width: 300px; margin: 0 auto 30px auto; }
         .carousel { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
         .carousel-btn { width: 45px; height: 45px; border-radius: 50%; border: none; background: var(--card-bg); box-shadow: 0 4px 10px rgba(0,0,0,0.05); font-size: 20px; font-weight: bold; color: #3b82f6; cursor: pointer; }
-        .hero-showcase { width: 160px; height: 160px; background: var(--card-bg); border-radius: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.08); display: flex; align-items: center; justify-content: center; overflow: hidden; border: 4px solid #e2e8f0; }
-        .hero-showcase img { width: 100%; height: 100%; object-fit: contain; }
-        .hero-info { margin-bottom: 30px; min-height: 60px; }
-        .hero-info h3 { margin: 0 0 5px 0; font-size: 22px; font-weight: 900; }
-        .hero-info p { margin: 0; font-size: 14px; color: #64748b; }
-        .btn-start { background: #3b82f6; color: white; border: none; padding: 16px 40px; border-radius: 30px; font-size: 20px; font-weight: 900; cursor: pointer; box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4); }
+        .hero-showcase { width: 160px; height: 160px; background: var(--card-bg); border-radius: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.08); display: flex; align-items: center; justify-content: center; border: 4px solid #e2e8f0; }
+        .hero-showcase img { width: 90%; height: 90%; object-fit: contain; }
+        .btn-start { background: #3b82f6; color: white; border: none; padding: 16px 40px; border-radius: 30px; font-size: 20px; font-weight: 900; cursor: pointer; }
 
-        /* ЭКРАН 2: ИСПРАВЛЕННАЯ ВЕРСТКА */
-        #screen-game { display: none; flex-direction: column; height: 100%; padding: 10px; position: relative; }
+        #screen-game { display: none; flex-direction: column; height: 100%; padding: 10px; }
         .presets-carousel { display: flex; overflow-x: auto; gap: 8px; padding-bottom: 8px; flex: 0 0 auto; scrollbar-width: none; }
         .preset-btn { flex: 0 0 auto; padding: 10px 16px; border-radius: 20px; background: var(--card-bg); border: 2px solid #e2e8f0; font-weight: 800; font-size: 12px; cursor: pointer; }
         .top-controls { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 8px; flex: 0 0 auto; }
         .btn-play { background: #10b981; color: white; border: none; flex: 1; border-radius: 18px; font-weight: 900; font-size: 16px; cursor: pointer; }
         .btn-play.playing { background: #ef4444; }
         .btn-icon { width: 48px; height: 48px; background: #e2e8f0; border: none; border-radius: 18px; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        
         .grid-wrap { flex: 1 1 auto; display: flex; flex-direction: column; gap: 2px; overflow: auto; padding: 10px 0; }
         .grid-section { display: flex; flex-direction: column; min-width: max-content; margin: 0 auto; }
         .grid-row { display: flex; gap: 4px; margin-bottom: 2px; }
         .cell { width: 40px; height: 32px; background: white; border-radius: 8px; border: 1px solid #e2e8f0; cursor: pointer; }
         .cell-rhythm { height: 45px; border: 2px dashed #cbd5e1; border-radius: 12px; }
-        .playhead-col { background: #cbd5e1 !important; border-color: #94a3b8; }
-        .grid-divider { height: 6px; background: #cbd5e1; border-radius: 4px; margin: 4px 0; width: 100%; }
+        .playhead-col { background: #cbd5e1 !important; }
+
         .bottom-stage { background: white; padding: 12px; border-radius: 20px 20px 0 0; box-shadow: 0 -5px 25px rgba(0,0,0,0.05); padding-bottom: calc(12px + env(safe-area-inset-bottom)); }
         .instrument-palette { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
-        .inst-btn { flex: 0 0 calc(33.333% - 10px); max-width: 100px; padding: 8px 4px; border-radius: 16px; border: 3px solid transparent; font-size: 10px; font-weight: 900; background: var(--bg-color); color: #64748b; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; }
+        .inst-btn { flex: 0 0 calc(33.333% - 6px); max-width: 100px; padding: 8px 4px; border-radius: 16px; border: 3px solid transparent; font-size: 10px; font-weight: 900; background: var(--bg-color); display: flex; flex-direction: column; align-items: center; cursor: pointer; }
         .inst-btn.selected { background: #ffffff !important; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-color: inherit; }
         .inst-img { width: 100%; aspect-ratio: 1/1; object-fit: contain; }
+        
         .settings-menu { display: none; position: absolute; top: 120px; right: 10px; background: white; padding: 15px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); border: 2px solid #e2e8f0; z-index: 100; flex-direction: column; gap: 10px; }
         @keyframes bounce { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1) translateY(-5px); } }
         .bounce { animation: bounce 0.2s ease; }
@@ -91,23 +85,18 @@
         </div>
         <div class="settings-menu" id="settingsMenu">
             <label>Длина: <select id="stepSelect" onchange="changeSteps(this.value)"><option value="16">16 шагов</option><option value="32">32 шага</option></select></label>
-            <label>Скорость: <input type="range" min="60" max="160" value="120" oninput="changeTempo(this.value)"><span id="bpmDisplay">120</span></label>
+            <label>Скорость: <input type="range" min="60" max="200" value="120" oninput="changeTempo(this.value)"><span id="bpmDisplay">120</span></label>
         </div>
         <div class="grid-wrap">
             <div id="melGrid" class="grid-section"></div>
-            <div class="grid-divider"></div>
+            <div style="height:6px; background:#cbd5e1; width:100%; margin:6px 0; border-radius:4px;"></div>
             <div id="rhyGrid" class="grid-section"></div>
         </div>
         <div class="bottom-stage"><div id="palette" class="instrument-palette"></div></div>
     </div>
 
     <script>
-        const HEROES = [
-            { id: 'cat', name: "Кошечка", desc: "Поп-звезда!" },
-            { id: 'dog', name: "Щенок", desc: "Панк-рокер!" },
-            { id: 'bear', name: "Мишка", desc: "Хип-хоп диджей!" },
-            { id: 'fox', name: "Лисичка", desc: "Джаз и фанк!" }
-        ];
+        const HEROES = [{id:'cat', name:'Кошечка', desc:'Поп-звезда!'}, {id:'dog', name:'Щенок', desc:'Панк-рокер!'}, {id:'bear', name:'Мишка', desc:'Хип-хоп диджей!'}, {id:'fox', name:'Лисичка', desc:'Джаз и фанк!'}];
         const INSTS = {
             guitar: {id:'guitar', type:'mel', img:'guitar', color:'#3b82f6', file:'guitar_base.wav'},
             trumpet: {id:'trumpet', type:'mel', img:'trumpet', color:'#a855f7', file:'trumpet_base.wav'},
@@ -115,7 +104,7 @@
             kick: {id:'kick', type:'rhy', img:'drum', color:'#ef4444', file:'kick.wav'},
             cymbals: {id:'cymbals', type:'rhy', img:'cymbals', color:'#eab308', file:'cymbal.wav'}
         };
-        const RATES = [2.0, 1.682, 1.498, 1.335, 1.26, 1.122, 1.0];
+        const RATES = [2.0, 1.68, 1.5, 1.33, 1.26, 1.12, 1.0];
         let state = { hero: 0, inst: 'guitar', grid: {}, rhy: {}, playing: false, step: 0, tempo: 120, steps: 16 };
         let audioCtx = null, buffers = {}, activeNodes = {};
 
@@ -133,11 +122,7 @@
             document.getElementById('screen-game').style.display = 'flex';
             audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             for (let k in INSTS) {
-                try {
-                    const res = await fetch(`sounds/${INSTS[k].file}`);
-                    const ab = await res.arrayBuffer();
-                    audioCtx.decodeAudioData(ab, b => buffers[k] = b);
-                } catch(e) {}
+                fetch(`sounds/${INSTS[k].file}`).then(r => r.arrayBuffer()).then(ab => audioCtx.decodeAudioData(ab, b => buffers[k] = b));
             }
             renderGame(); selectInstrument('guitar');
         }
@@ -168,13 +153,12 @@
 
         function renderPalette() {
             const p = document.getElementById('palette'); p.innerHTML = '';
-            const h = HEROES[state.hero];
             Object.keys(INSTS).forEach(k => {
                 const btn = document.createElement('button'); btn.className = 'inst-btn'; btn.id = `btn-${k}`;
                 if(state.inst === k && !state.playing) btn.classList.add('selected');
                 btn.style.borderColor = INSTS[k].color;
                 btn.onclick = () => selectInstrument(k);
-                btn.innerHTML = `<img class="inst-img" src="img/${h.id}_${INSTS[k].img}.png">`;
+                btn.innerHTML = `<img class="inst-img" src="img/${HEROES[state.hero].id}_${INSTS[k].img}.png">`;
                 p.appendChild(btn);
             });
         }
@@ -202,9 +186,9 @@
         function playSound(k, r) {
             if(!buffers[k]) return;
             const t = audioCtx.currentTime;
-            if(activeNodes[k]) { try { activeNodes[k].stop(t + 0.05); } catch(e){} }
+            if(activeNodes[k]) { try { activeNodes[k].stop(); } catch(e){} }
             const s = audioCtx.createBufferSource(); s.buffer = buffers[k]; s.playbackRate.value = r;
-            const g = audioCtx.createGain(); g.gain.setValueAtTime(0.8, t); g.gain.exponentialRampToValueAtTime(0.01, t + 0.5);
+            const g = audioCtx.createGain(); g.gain.setValueAtTime(0.7, t); g.gain.exponentialRampToValueAtTime(0.01, t + 0.4);
             s.connect(g); g.connect(audioCtx.destination); s.start(); activeNodes[k] = s;
         }
 
@@ -238,18 +222,16 @@
             if(type === 'yolochka') {
                 state.steps = 32; state.tempo = 100;
                 [0,4,8,12,16,20,24,28].forEach(c => state.rhy[c] = 'kick');
-                [[0,6],[2,1],[4,1],[6,2],[8,6],[12,3],[14,3],[16,6],[18,1],[20,1],[22,2],[24,6],[28,4],[30,4]].forEach(n => { state.grid[n[0]] = state.grid[n[0]] || {}; state.grid[n[0]][n[1]] = 'synth'; });
+                [[0,6],[2,1],[4,1],[6,2],[8,6],[10,6],[12,3],[14,3],[16,6],[18,1],[20,1],[22,2],[24,6],[28,4],[30,4]].forEach(n => { state.grid[n[0]] = state.grid[n[0]] || {}; state.grid[n[0]][n[1]] = 'synth'; });
             } else if(type === 'kuznechik') {
-                state.steps = 32; state.tempo = 130;
-                [0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30].forEach(c => state.rhy[c] = 'cymbals');
+                state.steps = 32; state.tempo = 150;
+                for(let i=0; i<32; i+=2) state.rhy[i] = 'cymbals';
                 [[0,1],[2,4],[4,1],[6,4],[8,1],[10,2],[12,2],[16,2],[18,4],[20,2],[22,4],[24,2],[26,1],[28,1]].forEach(n => { state.grid[n[0]] = state.grid[n[0]] || {}; state.grid[n[0]][n[1]] = 'guitar'; });
             }
             renderGame(); changeTempo(state.tempo); document.getElementById('stepSelect').value = state.steps;
         }
 
         async function exportWav() {
-            const hasFiles = Object.keys(buffers).length > 0;
-            if(!hasFiles) { alert("Звуки еще не загружены!"); return; }
             const dur = 10, sr = 44100;
             const offline = new (window.OfflineAudioContext || window.webkitOfflineAudioContext)(2, sr * dur, sr);
             const stepDur = (60 / state.tempo) / 4;
@@ -257,10 +239,10 @@
                 const time = sIdx * stepDur; if(time >= dur) break;
                 const cur = sIdx % state.steps;
                 if(state.grid[cur]) Object.keys(state.grid[cur]).forEach(r => {
-                    const id = state.grid[cur][r]; const src = offline.createBufferSource(); src.buffer = buffers[id]; src.playbackRate.value = RATES[r]; src.connect(offline.destination); src.start(time);
+                    const id = state.grid[cur][r]; if(buffers[id]) { const src = offline.createBufferSource(); src.buffer = buffers[id]; src.playbackRate.value = RATES[r]; src.connect(offline.destination); src.start(time); }
                 });
                 if(state.rhy[cur]) {
-                    const id = state.rhy[cur]; const src = offline.createBufferSource(); src.buffer = buffers[id]; src.connect(offline.destination); src.start(time);
+                    const id = state.rhy[cur]; if(buffers[id]) { const src = offline.createBufferSource(); src.buffer = buffers[id]; src.connect(offline.destination); src.start(time); }
                 }
             }
             const rendered = await offline.startRendering();
