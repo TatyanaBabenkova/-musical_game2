@@ -6,17 +6,16 @@
     <title>ЗвероБэнд</title>
     <style>
         :root {
-            --bg-color: #f1f5f9; /* Светло-серый фон */
+            --bg-color: #f1f5f9; 
             --text-color: #1e293b;
             --card-bg: #ffffff;
             --inactive-opacity: 0.3;
             
-            /* Цвета инструментов */
-            --color-kick: #ef4444;    /* Барабан - красный */
-            --color-cymbal: #eab308;  /* Тарелки - желтый */
-            --color-guitar: #3b82f6;  /* Гитара - синий */
-            --color-trumpet: #a855f7; /* Труба - фиолетовый */
-            --color-synth: #10b981;   /* Синт - зеленый */
+            --color-kick: #ef4444;    
+            --color-cymbal: #eab308;  
+            --color-guitar: #3b82f6;  
+            --color-trumpet: #a855f7; 
+            --color-synth: #10b981;   
         }
 
         * { box-sizing: border-box; touch-action: manipulation; }
@@ -79,14 +78,16 @@
         .preset-btn {
             flex: 0 0 auto; padding: 10px 16px; border-radius: 20px;
             background: var(--card-bg); border: 2px solid #e2e8f0; font-weight: 800;
-            font-size: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); cursor: pointer;
+            font-size: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); cursor: pointer; transition: 0.2s;
         }
+        .preset-btn:active { background: #e2e8f0; }
 
-        /* Верхняя панель (Play, Clear) */
-        .top-controls { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 15px; }
-        .btn-play { background: #10b981; color: white; flex: 1; padding: 14px; border-radius: 18px; font-size: 18px; font-weight: 900; border: none; box-shadow: 0 6px 15px rgba(16, 185, 129, 0.4); }
+        /* Верхняя панель (Play, Save, Clear) */
+        .top-controls { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 15px; align-items: stretch;}
+        .btn-play { background: #10b981; color: white; flex: 1; padding: 14px; border-radius: 18px; font-size: 18px; font-weight: 900; border: none; box-shadow: 0 6px 15px rgba(16, 185, 129, 0.4); transition: 0.2s;}
         .btn-play.playing { background: #ef4444; box-shadow: 0 6px 15px rgba(239, 68, 68, 0.4); }
-        .btn-clear { background: #e2e8f0; border: none; padding: 14px; border-radius: 18px; font-size: 20px; color: #475569; font-weight: bold;}
+        .btn-icon { width: 55px; background: #e2e8f0; border: none; border-radius: 18px; font-size: 22px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s;}
+        .btn-icon:active { transform: scale(0.9); }
 
         /* ИГРОВАЯ СЕТКА */
         .grid-wrap {
@@ -102,35 +103,30 @@
             display: flex; align-items: center; justify-content: center;
             box-shadow: 0 2px 4px rgba(0,0,0,0.02);
         }
-        /* Мелодия (7 строк) */
         .cell-melody { width: 42px; height: 32px; border: 1px solid #e2e8f0; }
-        /* Ритм (1 строка) */
         .cell-rhythm { width: 42px; height: 45px; border: 2px dashed #cbd5e1; border-radius: 12px; }
         
         .cell-active { box-shadow: inset 0 0 0 3px rgba(255,255,255,0.4); transform: scale(0.95); }
         .playhead-col { background: #cbd5e1 !important; border-color: #94a3b8; }
 
-        /* РАЗДЕЛИТЕЛЬ СЕТКИ */
         .grid-divider { height: 6px; background: #cbd5e1; border-radius: 4px; margin: 4px 0 8px 0; min-width: max-content;}
 
-        /* НИЖНЯЯ ПАНЕЛЬ С ИНСТРУМЕНТАМИ (ТЕПЕРЬ ТУТ КАРТИНКИ) */
+        /* НИЖНЯЯ ПАНЕЛЬ С ИНСТРУМЕНТАМИ (2 РЯДА) */
         .bottom-stage { 
-            display: flex; margin-top: auto; align-items: center; 
-            padding: 12px; background: var(--card-bg); border-radius: 24px; 
-            box-shadow: 0 -5px 25px rgba(0,0,0,0.05);
+            margin-top: auto; padding: 12px; background: var(--card-bg); 
+            border-radius: 24px; box-shadow: 0 -5px 25px rgba(0,0,0,0.05);
         }
 
         .instrument-palette { 
-            display: flex; flex-wrap: nowrap; gap: 6px; flex: 1; 
-            justify-content: space-between; overflow-x: auto; 
-            scrollbar-width: none;
+            display: flex; flex-wrap: wrap; gap: 10px; 
+            justify-content: center; width: 100%;
         }
-        .instrument-palette::-webkit-scrollbar { display: none; }
         
         .inst-btn {
-            flex: 1 1 0; min-width: 55px;
-            padding: 6px 4px; border-radius: 16px; border: 3px solid transparent;
-            font-size: 9px; font-weight: 900; background: var(--bg-color); color: #64748b;
+            /* 33.33% минус отступы дает ровно 3 элемента в верхнем ряду, остальные падают вниз */
+            flex: 0 0 calc(33.333% - 7px); max-width: 110px;
+            padding: 8px 4px; border-radius: 16px; border: 3px solid transparent;
+            font-size: 10px; font-weight: 900; background: var(--bg-color); color: #64748b;
             text-transform: uppercase; cursor: pointer; transition: 0.2s;
             display: flex; flex-direction: column; align-items: center; justify-content: space-between; gap: 4px;
         }
@@ -139,10 +135,9 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
         }
         .inst-img { width: 100%; aspect-ratio: 1/1; object-fit: contain; }
-        .inst-emoji { font-size: 22px; padding: 5px 0; }
+        .inst-emoji { font-size: 24px; padding: 5px 0; }
         .inst-name { white-space: nowrap; }
 
-        /* Анимация прыжка для кнопки при звучании */
         @keyframes bounceAnim {
             0% { transform: scale(1.05) translateY(0); }
             50% { transform: scale(1.15) translateY(-5px); }
@@ -153,6 +148,7 @@
         @media (max-height: 700px) {
             .cell-melody { height: 26px; }
             .cell-rhythm { height: 38px; }
+            .inst-btn { padding: 4px; font-size: 9px;}
         }
     </style>
 </head>
@@ -162,7 +158,7 @@
         <div class="start-header">
             <h1>ЗвероБэнд 🎸</h1>
             <h2>Создай свой первый хит!</h2>
-            <p>Выбирай музыканта, расставляй ноты в клеточки и слушай результат. Чья музыка будет самой крутой?</p>
+            <p>Выбирай музыканта, расставляй ноты в клеточки и слушай результат.</p>
         </div>
 
         <div class="carousel">
@@ -184,28 +180,32 @@
 
     <div id="screen-game">
         <div class="presets-carousel" id="presets-container">
-            <button class="preset-btn" onclick="clearGrid()">Очистить</button>
-            <button class="preset-btn" onclick="loadPreset('rock')">Рок-концерт</button>
-            <button class="preset-btn" onclick="loadPreset('dance')">Танцы</button>
-            <button class="preset-btn" onclick="loadPreset('train')">Стук колес</button>
+            <button class="preset-btn" onclick="loadPreset('rock')">🤘 Рок-хит</button>
+            <button class="preset-btn" onclick="loadPreset('dance')">🪩 Клуб</button>
+            <button class="preset-btn" onclick="loadPreset('pop')">🌟 Попса</button>
+            <button class="preset-btn" onclick="loadPreset('hiphop')">🧢 Хип-хоп</button>
+            <button class="preset-btn" onclick="loadPreset('jazz')">🎷 Джаз</button>
+            <button class="preset-btn" onclick="loadPreset('train')">🚂 Поезд</button>
+            <button class="preset-btn" onclick="loadPreset('lullaby')">🌙 Сон</button>
+            <button class="preset-btn" onclick="loadPreset('march')">🥁 Марш</button>
+            <button class="preset-btn" onclick="loadPreset('alien')">🛸 НЛО</button>
+            <button class="preset-btn" onclick="loadPreset('reggae')">🌴 Регги</button>
         </div>
 
         <div class="top-controls">
             <button class="btn-play" id="btnPlay" onclick="togglePlay()">▶ ИГРАТЬ</button>
-            <button class="btn-clear" onclick="clearGrid()">🗑️</button>
+            <button class="btn-icon" onclick="exportWav()" title="Сохранить">💾</button>
+            <button class="btn-icon" onclick="clearGrid()" title="Очистить">🗑️</button>
         </div>
 
         <div class="grid-wrap" id="gridWrap">
             <div id="melody-section" class="grid-section"></div>
-            
             <div class="grid-divider" id="gridDivider"></div>
-            
             <div id="rhythm-section" class="grid-section"></div>
         </div>
 
         <div class="bottom-stage">
-            <div class="instrument-palette" id="palette">
-                </div>
+            <div class="instrument-palette" id="palette"></div>
         </div>
     </div>
 
@@ -218,12 +218,13 @@
             { id: 'fox', name: "Лисичка", icon: "🦊", desc: "Джаз и фанк. Самая стильная." }
         ];
 
+        // ВАЖНО: imgName указывает, как называется часть файла (напр. cat_drum.png)
         const INSTRUMENTS = {
-            guitar: { id: 'guitar', type: 'melody', color: 'var(--color-guitar)', file: 'guitar_base.wav', icon: '🎸', name: 'Гитара' },
-            trumpet: { id: 'trumpet', type: 'melody', color: 'var(--color-trumpet)', file: 'trumpet_base.wav', icon: '🎺', name: 'Труба' },
-            synth: { id: 'synth', type: 'melody', color: 'var(--color-synth)', file: 'synth_base.wav', icon: '🎹', name: 'Синт' },
-            kick: { id: 'kick', type: 'rhythm', color: 'var(--color-kick)', file: 'kick.wav', icon: '🥁', name: 'Барабан' },
-            cymbal: { id: 'cymbal', type: 'rhythm', color: 'var(--color-cymbal)', file: 'cymbal.wav', icon: '🔔', name: 'Тарелки' }
+            guitar: { id: 'guitar', type: 'melody', imgName: 'guitar', color: 'var(--color-guitar)', file: 'guitar_base.wav', icon: '🎸', name: 'Гитара' },
+            trumpet: { id: 'trumpet', type: 'melody', imgName: 'trumpet', color: 'var(--color-trumpet)', file: 'trumpet_base.wav', icon: '🎺', name: 'Труба' },
+            synth: { id: 'synth', type: 'melody', imgName: 'synth', color: 'var(--color-synth)', file: 'synth_base.wav', icon: '🎹', name: 'Синт' },
+            kick: { id: 'kick', type: 'rhythm', imgName: 'drum', color: 'var(--color-kick)', file: 'kick.wav', icon: '🥁', name: 'Барабан' },
+            cymbal: { id: 'cymbal', type: 'rhythm', imgName: 'cymbals', color: 'var(--color-cymbal)', file: 'cymbal.wav', icon: '🔔', name: 'Тарелки' }
         };
 
         const STEPS = 16;
@@ -244,7 +245,7 @@
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         const buffers = {};
 
-        // --- ЛОГИКА ЭКРАНА 1 (КАРУСЕЛЬ) ---
+        // --- ЛОГИКА ЭКРАНА 1 ---
         function updateCarousel() {
             const h = HEROES[state.heroIdx];
             document.getElementById('startName').textContent = h.name;
@@ -269,7 +270,6 @@
             
             if(audioCtx.state === 'suspended') audioCtx.resume();
             
-            // Загрузка реальных звуков (без паники, если файлов нет)
             for (let key in INSTRUMENTS) {
                 try {
                     const resp = await fetch(`sounds/${INSTRUMENTS[key].file}`);
@@ -283,9 +283,8 @@
         }
 
         function buildUI() {
-            // Строим сетку Мелодии
             const melSec = document.getElementById('melody-section');
-            melSec.innerHTML = ''; // Очистка на всякий случай
+            melSec.innerHTML = ''; 
             for (let r = 0; r < MELODY_ROWS; r++) {
                 let rowHtml = `<div class="grid-row">`;
                 for (let c = 0; c < STEPS; c++) rowHtml += `<div class="cell cell-melody" id="cell-m-${c}-${r}" onclick="toggleMelody(${c}, ${r})"></div>`;
@@ -293,7 +292,6 @@
                 melSec.innerHTML += rowHtml;
             }
 
-            // Строим сетку Ритма
             const rhySec = document.getElementById('rhythm-section');
             let rowHtml = `<div class="grid-row">`;
             for (let c = 0; c < STEPS; c++) rowHtml += `<div class="cell cell-rhythm" id="cell-r-${c}" onclick="toggleRhythm(${c})"></div>`;
@@ -301,7 +299,6 @@
             rhySec.innerHTML = rowHtml;
             document.getElementById('gridDivider').style.width = `${STEPS * 46}px`;
 
-            // Строим палитру ИЗ КАРТИНОК ГЕРОЯ
             const pal = document.getElementById('palette');
             pal.innerHTML = '';
             const hero = HEROES[state.heroIdx]; 
@@ -310,7 +307,7 @@
                 const inst = INSTRUMENTS[k];
                 pal.innerHTML += `
                     <button class="inst-btn" id="btn-inst-${k}" onclick="selectInstrument('${k}')">
-                        <img class="inst-img" src="img/${hero.id}_${k}.png" alt="${inst.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                        <img class="inst-img" src="img/${hero.id}_${inst.imgName}.png" alt="${inst.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
                         <span class="inst-emoji" style="display:none;">${hero.icon}${inst.icon}</span>
                         <div class="inst-name">${inst.name}</div>
                     </button>`;
@@ -322,20 +319,17 @@
             state.instrument = instId;
             const inst = INSTRUMENTS[instId];
             
-            // Сбрасываем стили у всех кнопок
             document.querySelectorAll('.inst-btn').forEach(b => {
                 b.classList.remove('selected'); 
                 b.style.background = 'var(--bg-color)'; 
                 b.style.borderColor = 'transparent';
             });
             
-            // Красим выбранную кнопку
             const activeBtn = document.getElementById(`btn-inst-${instId}`);
             activeBtn.classList.add('selected'); 
             activeBtn.style.background = '#ffffff'; 
             activeBtn.style.borderColor = inst.color;
 
-            // УМНОЕ ЗАТЕМНЕНИЕ СЕТОК
             const melSec = document.getElementById('melody-section');
             const rhySec = document.getElementById('rhythm-section');
             
@@ -376,11 +370,10 @@
         }
 
         function bounceHero() {
-            // Прыгает сама выбранная кнопка с картинкой
             const activeBtn = document.getElementById(`btn-inst-${state.instrument}`);
             if(activeBtn) {
                 activeBtn.classList.remove('bounce');
-                void activeBtn.offsetWidth; // Магия для перезапуска CSS анимации
+                void activeBtn.offsetWidth; 
                 activeBtn.classList.add('bounce');
             }
         }
@@ -393,7 +386,6 @@
                 source.buffer = buf; source.playbackRate.value = rate;
                 source.connect(audioCtx.destination); source.start();
             } else {
-                // Синтезатор-заглушка
                 const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
                 osc.connect(gain); gain.connect(audioCtx.destination);
                 const t = audioCtx.currentTime;
@@ -461,6 +453,7 @@
             }
         }
 
+        // --- ПРЕСЕТЫ ---
         function clearGrid() {
             state.grid = {}; state.rhythmGrid = {};
             document.querySelectorAll('.cell-active').forEach(c => { c.classList.remove('cell-active'); c.style.background = ''; });
@@ -468,20 +461,120 @@
 
         function loadPreset(type) {
             clearGrid();
+            let prevInst = state.instrument; // запоминаем инструмент, чтобы вернуть в конце
+            
+            const drawMelody = (inst, arr) => { selectInstrument(inst); arr.forEach(pos => toggleMelody(pos[0], pos[1])); }
+            const drawRhythm = (inst, arr) => { selectInstrument(inst); arr.forEach(col => toggleRhythm(col)); }
+
             if(type === 'rock') {
-                selectInstrument('kick'); toggleRhythm(0); toggleRhythm(8);
-                selectInstrument('cymbal'); toggleRhythm(4); toggleRhythm(12);
-                selectInstrument('guitar'); toggleMelody(0, 6); toggleMelody(2, 5); toggleMelody(4, 4); toggleMelody(8, 6); toggleMelody(10, 5); toggleMelody(12, 4);
+                drawRhythm('kick', [0, 8]); drawRhythm('cymbal', [4, 12]);
+                drawMelody('guitar', [[0,6],[2,5],[4,4],[8,6],[10,5],[12,4]]);
             } else if (type === 'dance') {
-                selectInstrument('kick'); [0,4,8,12].forEach(toggleRhythm);
-                selectInstrument('synth'); toggleMelody(0,2); toggleMelody(3,2); toggleMelody(6,4); toggleMelody(10,3);
+                drawRhythm('kick', [0,4,8,12]); drawRhythm('cymbal', [2,6,10,14]);
+                drawMelody('synth', [[0,2],[3,2],[6,4],[10,3],[14,2]]);
+            } else if (type === 'pop') {
+                drawRhythm('kick', [0, 8]); drawRhythm('cymbal', [4, 12]);
+                drawMelody('synth', [[0,4],[2,4],[4,3],[6,3],[8,2],[10,2],[12,1]]);
+            } else if (type === 'hiphop') {
+                drawRhythm('kick', [0, 10]); drawRhythm('cymbal', [4, 12]);
+                drawMelody('synth', [[0,6],[4,6],[8,5]]);
+            } else if (type === 'jazz') {
+                drawRhythm('cymbal', [0,3,4,7,8,11,12,15]);
+                drawMelody('trumpet', [[0,3],[4,2],[8,1],[12,4]]);
             } else if (type === 'train') {
-                selectInstrument('cymbal'); [0,2,4,6,8,10,12,14].forEach(toggleRhythm);
-                selectInstrument('trumpet'); toggleMelody(0,1); toggleMelody(8,0);
+                drawRhythm('kick', [0, 8]); drawRhythm('cymbal', [0,2,4,6,8,10,12,14]);
+                drawMelody('trumpet', [[0,1],[8,0]]);
+            } else if (type === 'lullaby') {
+                drawMelody('guitar', [[0,4],[2,3],[4,2],[6,1],[8,4],[10,3],[12,2],[14,1]]);
+            } else if (type === 'march') {
+                drawRhythm('kick', [0,4,8,12]); drawRhythm('cymbal', [0,2,4,6,8,10,12,14]);
+                drawMelody('trumpet', [[0,2],[2,2],[4,2],[8,3],[10,3],[12,3]]);
+            } else if (type === 'alien') {
+                drawRhythm('cymbal', [0, 15]);
+                drawMelody('synth', [[0,0],[3,6],[6,1],[9,5],[12,2],[15,4]]);
+            } else if (type === 'reggae') {
+                drawRhythm('kick', [0, 8]); drawRhythm('cymbal', [4, 12]);
+                drawMelody('guitar', [[2,4],[6,4],[10,4],[14,4]]);
             }
+            selectInstrument(prevInst);
         }
 
-        updateCarousel(); // Старт карусели
+        // --- СОХРАНЕНИЕ В WAV ---
+        function audioBufferToWav(buffer) {
+            let numChannels = buffer.numberOfChannels, sampleRate = buffer.sampleRate;
+            let result = new Int16Array(buffer.length * numChannels);
+            for (let i = 0; i < numChannels; i++) {
+                let channel = buffer.getChannelData(i);
+                for (let j = 0; j < channel.length; j++) {
+                    let sample = Math.max(-1, Math.min(1, channel[j]));
+                    result[j * numChannels + i] = sample < 0 ? sample * 32768 : sample * 32767;
+                }
+            }
+            let header = new ArrayBuffer(44), view = new DataView(header);
+            const writeString = (o, s) => { for (let i = 0; i < s.length; i++) view.setUint8(o + i, s.charCodeAt(i)); };
+            writeString(0, 'RIFF'); view.setUint32(4, 36 + result.byteLength, true); writeString(8, 'WAVE'); writeString(12, 'fmt '); view.setUint32(16, 16, true);
+            view.setUint16(20, 1, true); view.setUint16(22, numChannels, true); view.setUint32(24, sampleRate, true); view.setUint32(28, sampleRate * numChannels * 2, true);
+            view.setUint16(32, numChannels * 2, true); view.setUint16(34, 16, true); writeString(36, 'data'); view.setUint32(40, result.byteLength, true);
+            return new Blob([header, result], { type: 'audio/wav' });
+        }
+
+        async function exportWav() {
+            // Проверяем, есть ли реальные файлы (без них экспортировать нечего)
+            let hasFiles = Object.values(buffers).some(b => b !== null);
+            if (!hasFiles) {
+                alert("Для сохранения музыки нужны загруженные аудиофайлы в папке /sounds/ !");
+                return;
+            }
+
+            const totalDuration = 10; // Сохраняем 10 секунд
+            const sr = 44100;
+            const offlineCtx = new OfflineAudioContext(2, sr * totalDuration, sr);
+            
+            const compressor = offlineCtx.createDynamicsCompressor();
+            compressor.threshold.setValueAtTime(-6, offlineCtx.currentTime);
+            compressor.connect(offlineCtx.destination);
+
+            const stepDur = (60 / state.tempo) / 4;
+            const loops = Math.ceil(totalDuration / (STEPS * stepDur));
+
+            for (let loop = 0; loop < loops; loop++) {
+                let loopOffset = loop * STEPS * stepDur;
+
+                for(let step=0; step<STEPS; step++) {
+                    let start = loopOffset + step * stepDur;
+                    if (start >= totalDuration) continue;
+
+                    if (state.grid[step]) {
+                        for(let r in state.grid[step]) {
+                            let instId = state.grid[step][r].instId;
+                            if (buffers[instId]) {
+                                let source = offlineCtx.createBufferSource();
+                                source.buffer = buffers[instId];
+                                source.playbackRate.value = RATES[r];
+                                source.connect(compressor);
+                                source.start(start);
+                            }
+                        }
+                    }
+                    if (state.rhythmGrid[step]) {
+                        let instId = state.rhythmGrid[step].instId;
+                        if (buffers[instId]) {
+                            let source = offlineCtx.createBufferSource();
+                            source.buffer = buffers[instId];
+                            source.connect(compressor);
+                            source.start(start);
+                        }
+                    }
+                }
+            }
+            
+            const renderedBuffer = await offlineCtx.startRendering();
+            const blob = audioBufferToWav(renderedBuffer);
+            const link = document.createElement('a'); link.href = URL.createObjectURL(blob);
+            link.download = 'ZveroBand_Hit.wav'; link.click();
+        }
+
+        updateCarousel(); // Старт
     </script>
 </body>
 </html>
