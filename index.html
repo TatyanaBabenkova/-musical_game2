@@ -13,7 +13,7 @@
         * { box-sizing: border-box; touch-action: manipulation; }
         body { margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; background-color: var(--bg-color); color: var(--text-color); display: flex; flex-direction: column; height: 100dvh; overflow: hidden; }
         
-        /* ЭКРАН 1: С КАРТИНКОЙ BG.PNG И ВОССТАНОВЛЕННЫМ ОПИСАНИЕМ */
+        /* ЭКРАН 1: С КАРТИНКОЙ BG.PNG И ОПИСАНИЕМ */
         #screen-start { 
             display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; 
             text-align: center; background: url('img/bg.png') no-repeat center center/cover; padding: 20px; 
@@ -26,7 +26,6 @@
         .start-header h2 { font-size: 18px; font-weight: 600; color: #64748b; margin: 0 0 10px 0; }
         .start-header p { font-size: 14px; color: #94a3b8; max-width: 350px; margin: 0 auto 20px auto; line-height: 1.4; }
         
-        /* КРУПНАЯ КАРТИНКА НА ЗАСТАВКЕ */
         .hero-showcase { 
             width: 250px; height: 250px; margin: 15px; background: rgba(248,250,252, 0.9); 
             border-radius: 45px; border: 4px solid #e2e8f0; display: flex; align-items: center; justify-content: center;
@@ -38,7 +37,7 @@
         .carousel-wrap { display: flex; align-items: center; gap: 15px; }
         .nav-btn { background: rgba(241,245,249,0.9); border: none; border-radius: 50%; width: 45px; height: 45px; font-size: 22px; color: #3b82f6; cursor: pointer; display:flex; align-items:center; justify-content:center; }
 
-        /* ЭКРАН 2: ВЕРСТКА С ФИКСИРОВАННЫМИ НОТАМИ */
+        /* ЭКРАН 2: ИГРА И СЕТКА */
         #screen-game { display: none; flex-direction: column; height: 100%; padding: 10px; }
         .presets-carousel { display: flex; overflow-x: auto; gap: 8px; padding-bottom: 8px; flex: 0 0 auto; scrollbar-width: none; }
         .preset-btn { flex: 0 0 auto; padding: 10px 16px; border-radius: 20px; background: var(--card-bg); border: 2px solid #e2e8f0; font-weight: 800; font-size: 12px; cursor: pointer; }
@@ -54,7 +53,6 @@
         .grid-section { display: flex; flex-direction: column; min-width: max-content; padding-left: 5px; }
         .grid-row { display: flex; gap: 3px; margin-bottom: 2px; }
         
-        /* ФИКСИРОВАННЫЕ НАЗВАНИЯ НОТ (РАБОТАЮТ НА ТЕЛЕФОНЕ И ПК) */
         .cell-label { 
             position: sticky; left: 0; z-index: 5;
             width: 45px; height: 32px; display: flex; align-items: center; justify-content: center; 
@@ -66,7 +64,7 @@
         .cell-rhythm { height: 42px; border: 2px dashed #cbd5e1; border-radius: 10px; }
         .playhead-col { background: #cbd5e1 !important; border-color: #94a3b8; }
 
-        /* НИЖНЯЯ ПАНЕЛЬ С КРУПНЫМИ ИНСТРУМЕНТАМИ И РАЗНОЦВЕТНЫМ ВЫДЕЛЕНИЕМ */
+        /* ПАНЕЛЬ ИНСТРУМЕНТОВ */
         .bottom-stage { background: white; padding: 12px; border-radius: 25px 25px 0 0; box-shadow: 0 -5px 20px rgba(0,0,0,0.05); flex-shrink: 0; }
         .instrument-palette { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
         .inst-btn { 
@@ -75,10 +73,9 @@
             flex-direction: column; align-items: center; cursor: pointer; transition: 0.2s;
         }
         
-        /* УВЕЛИЧЕННЫЕ КАРТИНКИ ИНСТРУМЕНТОВ */
         .inst-img { width: 60px; height: 60px; object-fit: contain; }
 
-        /* РАЗНОЦВЕТНОЕ ВЫДЕЛЕНИЕ ВЫБРАННОГО ИНСТРУМЕНТА */
+        /* РАЗНОЦВЕТНОЕ ВЫДЕЛЕНИЕ */
         .inst-btn.selected { background: #ffffff !important; transform: scale(1.05); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
         .inst-btn-guitar.selected { border-color: var(--color-guitar) !important; box-shadow: 0 8px 20px rgba(59,130,246,0.3); }
         .inst-btn-trumpet.selected { border-color: var(--color-trumpet) !important; box-shadow: 0 8px 20px rgba(168,85,247,0.3); }
@@ -86,18 +83,19 @@
         .inst-btn-kick.selected { border-color: var(--color-kick) !important; box-shadow: 0 8px 20px rgba(239,68,68,0.3); }
         .inst-btn-cymbals.selected { border-color: var(--color-cymbal) !important; box-shadow: 0 8px 20px rgba(234,179,8,0.3); }
         
+        /* АДАПТИВ ДЛЯ ТЕЛЕФОНА: УВЕЛИЧЕННЫЕ ИНСТРУМЕНТЫ */
         @media (max-width: 600px) {
             .hero-showcase { width: 200px; height: 200px; }
-            .inst-img { width: 45px; height: 45px; }
-            .inst-btn { flex: 0 0 calc(33% - 8px); max-width: 100px; border-radius: 16px; padding: 6px; }
+            .inst-img { width: 65px; height: 65px; } /* Сделали картинки значительно крупнее на мобильном! */
+            .inst-btn { flex: 0 0 calc(33.33% - 10px); max-width: 110px; border-radius: 18px; padding: 8px; }
             .cell { width: 34px; height: 28px; }
             .cell-label { width: 36px; font-size: 8px; }
             .start-header h1 { font-size: 26px; }
             .btn-start { padding: 16px 40px; font-size: 20px; }
         }
         
+        /* АДАПТИВ ДЛЯ КОМПЬЮТЕРА: ОГРОМНЫЕ ИНСТРУМЕНТЫ */
         @media (min-width: 800px) {
-            /* ЕЩЕ КРУПНЕЕ ДЛЯ КОМПЬЮТЕРА (2.5x) */
             .inst-btn { flex: 0 0 160px; max-width: 180px; border-radius: 30px; padding: 15px; }
             .inst-img { width: 130px; height: 130px; }
         }
@@ -130,13 +128,13 @@
         <div class="presets-carousel" id="presets-container">
             <button class="preset-btn" onclick="loadPreset('yolochka')">🎄 Ёлочка</button>
             <button class="preset-btn" onclick="loadPreset('kuznechik')">🦗 Кузнечик</button>
-            <button class="preset-btn" onclick="loadPreset('twinkle')">⭐ Twinkle (Звезда)</button>
-            <button class="preset-btn" onclick="loadPreset('dance')">🪩 Клубный хит</button>
-            <button class="preset-btn" onclick="loadPreset('rock')">🤘 Рок-боевик</button>
-            <button class="preset-btn" onclick="loadPreset('ufo')">🛸 НЛО и пришельцы</button>
+            <button class="preset-btn" onclick="loadPreset('twinkle')">⭐ Звездочка</button>
+            <button class="preset-btn" onclick="loadPreset('dance')">🪩 Клуб</button>
+            <button class="preset-btn" onclick="loadPreset('rock')">🤘 Рок</button>
+            <button class="preset-btn" onclick="loadPreset('ufo')">🛸 НЛО</button>
             <button class="preset-btn" onclick="loadPreset('train')">🚂 Паровоз</button>
-            <button class="preset-btn" onclick="loadPreset('chizhik')">🐦 Чижик-Пыжик</button>
-            <button class="preset-btn" onclick="loadPreset('gusi')"> Swan Жили у бабуси</button>
+            <button class="preset-btn" onclick="loadPreset('chizhik')">🐦 Чижик</button>
+            <button class="preset-btn" onclick="loadPreset('gusi')">🦢 Гуси</button>
             <button class="preset-btn" onclick="loadPreset('pop')">🌟 Попса</button>
         </div>
         <div class="top-controls">
@@ -158,7 +156,12 @@
     </div>
 
     <script>
-        const HEROES = [{id:'cat', name:'Кошечка', desc:'Поп-звезда!'}, {id:'dog', name:'Щенок', desc:'Панк-рокер!'}, {id:'bear', name:'Мишка', desc:'Хип-хоп диджей!'}, {id:'fox', name:'Лисичка', desc:'Джаз и фанк!'}];
+        const HEROES = [
+            {id:'cat', name:'Кошечка', desc:'Поп-звезда!'}, 
+            {id:'dog', name:'Щенок', desc:'Панк-рокер!'},
+            {id:'bear', name:'Мишка', desc:'Хип-хоп диджей!'}, 
+            {id:'fox', name:'Лисичка', desc:'Джаз и фанк!'}
+        ];
         const INSTS = {
             guitar: {id:'guitar', type:'mel', color:'#3b82f6', file:'guitar_base.wav'},
             trumpet: {id:'trumpet', type:'mel', color:'#a855f7', file:'trumpet_base.wav'},
@@ -184,10 +187,13 @@
             const AudioContext = window.AudioContext || window.webkitAudioContext;
             audioCtx = new AudioContext();
             if (audioCtx.state === 'suspended') await audioCtx.resume();
+            
             Object.keys(INSTS).forEach(k => {
-                fetch(`sounds/${INSTS[k].file}`).then(r => r.arrayBuffer()).then(ab => audioCtx.decodeAudioData(ab, b => buffers[k] = b));
+                fetch(`sounds/${INSTS[k].file}`).then(r => r.arrayBuffer()).then(ab => audioCtx.decodeAudioData(ab, b => buffers[k] = b)).catch(() => {});
             });
-            renderGame(); selectInstrument('guitar');
+
+            renderGame();
+            selectInstrument('guitar');
         }
 
         function renderGame() {
@@ -221,7 +227,6 @@
             const h = HEROES[state.hero];
             Object.keys(INSTS).forEach(k => {
                 const btn = document.createElement('button'); 
-                // Добавляем специфичный класс для инструмента
                 btn.className = `inst-btn inst-btn-${k}`; 
                 btn.id = `btn-${k}`;
                 if(state.inst === k && !state.playing) btn.classList.add('selected');
@@ -253,7 +258,7 @@
         }
 
         function playSound(k, r) {
-            if(!buffers[k]) return;
+            if(!audioCtx || !buffers[k]) return;
             const t = audioCtx.currentTime;
             if(activeNodes[k]) { try { activeNodes[k].stop(t+0.05); } catch(e){} }
             const s = audioCtx.createBufferSource(); s.buffer = buffers[k]; s.playbackRate.value = r;
@@ -266,8 +271,17 @@
         function togglePlay() {
             state.playing = !state.playing;
             const b = document.getElementById('btnPlay');
-            if(state.playing) { b.innerText = '■ СТОП'; b.classList.add('playing'); document.querySelectorAll('.inst-btn').forEach(x => x.classList.remove('selected')); loop(); }
-            else { b.innerText = '▶ ИГРАТЬ'; b.classList.remove('playing'); clearTimeout(state.timer); state.step = 0; document.querySelectorAll('.cell').forEach(x => x.classList.remove('playhead-col')); selectInstrument(state.inst || 'guitar'); }
+            if(state.playing) { 
+                b.innerText = '■ СТОП'; b.classList.add('playing'); 
+                document.querySelectorAll('.inst-btn').forEach(x => x.classList.remove('selected'));
+                document.getElementById('melGrid').style.opacity = 1; document.getElementById('rhyGrid').style.opacity = 1;
+                loop(); 
+            } else { 
+                b.innerText = '▶ ИГРАТЬ'; b.classList.remove('playing'); 
+                clearTimeout(state.timer); state.step = 0; 
+                document.querySelectorAll('.cell').forEach(x => x.classList.remove('playhead-col'));
+                selectInstrument(state.inst || 'guitar'); 
+            }
         }
 
         function loop() {
@@ -286,69 +300,47 @@
         function changeSteps(v) { state.steps = parseInt(v); renderGame(); }
         function changeTempo(v) { state.tempo = parseInt(v); document.getElementById('bpmDisplay').innerText = v; }
 
-        // МУЗЫКАЛЬНЫЙ ПРОФЕССИОНАЛ: РАССТАВЛЯЕМ НОТЫ
         function loadPreset(type) {
             clearGrid();
             const draw = (c, r, inst, isRhy=false) => { if(!isRhy) { state.grid[c] = state.grid[c] || {}; state.grid[c][r] = inst; } else { state.rhy[c] = inst; } };
             
             if(type === 'yolochka') {
                 state.steps = 32; state.tempo = 100;
-                // Ритм: Марш (Раз-Два)
                 for(let i=0; i<32; i+=4) { draw(i, 0, 'kick', true); draw(i+2, 0, 'cymbals', true); }
-                // СОЛЬ(2)-МИ(4)-МИ(4) - В лесу родилась...
-                [[0,2],[2,4],[4,4],[6,3],[8,4],[10,5],[12,6],[14,2],[16,2],[18,1],[20,1],[22,3],[24,5],[26,4]].forEach(n => draw(n[0], n[1], 'synth'));
-            
+                // Правильная Ёлочка по нотам!
+                [[0,2],[2,4],[4,4],[6,3],[8,4],[10,5],[12,6],[14,2],[16,2],[18,1],[20,1],[22,3],[24,5],[28,6]].forEach(n => draw(n[0], n[1], 'synth'));
             } else if(type === 'kuznechik') {
                 state.steps = 32; state.tempo = 160;
-                // Ритм: Стрекотание тарелок
                 for(let i=0; i<32; i++) draw(i, 0, 'cymbals', true);
-                // МИ(4)-ДО(6)-МИ(4)-ДО(6)...
                 [[0,4],[2,6],[4,4],[6,6],[8,4],[10,5],[12,5],[14,5],[16,5],[18,4],[20,5],[22,4],[24,5],[26,6],[28,6]].forEach(n => draw(n[0], n[1], 'guitar'));
-            
             } else if(type === 'twinkle') {
                 state.steps = 32; state.tempo = 90;
                 for(let i=0; i<32; i+=4) { draw(i, 0, 'kick', true); draw(i+1, 0, 'cymbals', true); draw(i+2, 0, 'kick', true); draw(i+3, 0, 'cymbals', true); }
-                // ДО(6)-ДО(6)-СОЛЬ(2)-СОЛЬ(2)...
                 [[0,6],[2,6],[4,2],[6,2],[8,1],[10,1],[12,2],[16,3],[18,3],[20,4],[22,4],[24,5],[26,5],[28,6]].forEach(n => draw(n[0], n[1], 'trumpet'));
-
             } else if(type === 'ufo') {
                 state.steps = 16; state.tempo = 120;
                 draw(0, 0, 'kick', true); draw(8, 0, 'kick', true);
-                // Космические переливы
                 [[0,6],[1,5],[2,4],[3,3],[4,2],[8,6],[9,5],[10,4],[11,3],[12,2]].forEach(n => draw(n[0], n[1], 'synth'));
                 [[0,0],[2,0],[4,0],[8,1],[10,1],[12,1]].forEach(n => draw(n[0], n[1], 'trumpet'));
-
             } else if(type === 'train') {
                 state.steps = 16; state.tempo = 120;
-                // Ритм паровоза: Чух-Чух
                 for(let i=0; i<16; i+=2) { draw(i, 0, 'kick', true); draw(i+1, 0, 'kick', true); }
-                // Гудок
                 draw(0, 2, 'trumpet'); draw(1, 2, 'trumpet'); draw(8, 3, 'trumpet'); draw(9, 3, 'trumpet');
-            
             } else if(type === 'rock') {
                 state.steps = 16; state.tempo = 130;
                 for(let i=0; i<16; i+=4) { draw(i, 0, 'kick', true); draw(i+2, 0, 'kick', true); draw(i+3, 0, 'cymbals', true); }
-                // Рок-бас
                 [[0,6],[1,6],[3,5],[4,6],[5,6],[7,5]].forEach(n => draw(n[0], n[1], 'guitar'));
-
             } else if(type === 'dance') {
                 state.steps = 16; state.tempo = 128;
                 for(let i=0; i<16; i+=4) draw(i, 0, 'kick', true);
-                // Прямой бит
                 [[2,3],[6,3],[10,3],[14,3]].forEach(n => draw(n[0], n[1], 'synth'));
-
             } else if(type === 'chizhik') {
                 state.steps = 16; state.tempo = 110;
-                // МИ(4)-ДО(6)-МИ(4)-ДО(6)-ФА(3)...
                 [[0,4],[2,6],[4,4],[6,6],[8,3],[10,4],[12,5],[14,2]].forEach(n => draw(n[0], n[1], 'synth'));
-
             } else if(type === 'gusi') {
                 state.steps = 32; state.tempo = 120;
-                // Ритм
                 [0,4,8,12,16,20,24,28].forEach(i => draw(i, 0, 'kick', true));
-                // ФА(3)-МИ(4)-РЕ(5)-ДО(6)-СОЛЬ(2)-СОЛЬ(2)...
                 [[0,3],[2,4],[4,5],[6,6],[8,2],[10,2],[16,3],[18,4],[20,5],[22,6],[24,2],[26,2]].forEach(n => draw(n[0], n[1], 'guitar'));
-
             } else if(type === 'pop') {
                 state.steps = 16; state.tempo = 120;
                 for(let i=0; i<16; i+=4) { draw(i, 0, 'kick', true); draw(i+2, 0, 'kick', true); }
@@ -359,7 +351,7 @@
         }
 
         async function exportWav() {
-            if(!buffers['guitar']) { alert("Звуки еще загружаются..."); return; }
+            if(Object.keys(buffers).length === 0) { alert("Звуки еще загружаются..."); return; }
             const dur = 10, sr = 44100;
             const offline = new (window.OfflineAudioContext || window.webkitOfflineAudioContext)(2, sr * dur, sr);
             const stepDur = (60 / state.tempo) / 4;
@@ -370,7 +362,7 @@
                     const id = state.grid[cur][r]; if(buffers[id]) { const src = offline.createBufferSource(); src.buffer = buffers[id]; src.playbackRate.value = RATES[r]; src.connect(offline.destination); src.start(time); }
                 });
                 if(state.rhy[cur]) {
-                    const id = state.rhy[cur]; if(buffers[id]) { const src = offline.createBufferSource(); src.buffer = buffers[id]; src.playbackRate.value = 1; src.connect(offline.destination); src.start(time); }
+                    const id = state.rhy[cur]; if(buffers[id]) { const src = offline.createBufferSource(); src.buffer = buffers[id]; src.connect(offline.destination); src.start(time); }
                 }
             }
             const rendered = await offline.startRendering();
