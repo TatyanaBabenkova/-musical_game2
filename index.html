@@ -83,11 +83,14 @@
         .inst-btn-kick.selected { border-color: var(--color-kick) !important; box-shadow: 0 8px 20px rgba(239,68,68,0.3); }
         .inst-btn-cymbals.selected { border-color: var(--color-cymbal) !important; box-shadow: 0 8px 20px rgba(234,179,8,0.3); }
         
-        /* АДАПТИВ ДЛЯ ТЕЛЕФОНА: УВЕЛИЧЕННЫЕ ИНСТРУМЕНТЫ */
+        /* АДАПТИВ ДЛЯ ТЕЛЕФОНА: МАКСИМАЛЬНО КРУПНЫЕ ИНСТРУМЕНТЫ БЕЗ УЩЕРБА ТАБЛИЦЕ */
         @media (max-width: 600px) {
             .hero-showcase { width: 200px; height: 200px; }
-            .inst-img { width: 65px; height: 65px; } /* Сделали картинки значительно крупнее на мобильном! */
-            .inst-btn { flex: 0 0 calc(33.33% - 10px); max-width: 110px; border-radius: 18px; padding: 8px; }
+            .bottom-stage { padding: 10px; padding-bottom: calc(10px + env(safe-area-inset-bottom)); border-radius: 20px 20px 0 0; }
+            .instrument-palette { gap: 5px; } /* Уменьшили отступ между кнопками */
+            .inst-btn { flex: 0 0 calc(33.33% - 5px); max-width: 115px; border-radius: 16px; padding: 4px; } /* Уменьшили рамку внутри */
+            .inst-img { width: 80px; height: 80px; } /* Сделали саму картинку гигантской! */
+            
             .cell { width: 34px; height: 28px; }
             .cell-label { width: 36px; font-size: 8px; }
             .start-header h1 { font-size: 26px; }
@@ -307,8 +310,8 @@
             if(type === 'yolochka') {
                 state.steps = 32; state.tempo = 100;
                 for(let i=0; i<32; i+=4) { draw(i, 0, 'kick', true); draw(i+2, 0, 'cymbals', true); }
-                // Правильная Ёлочка по нотам!
-                [[0,2],[2,4],[4,4],[6,3],[8,4],[10,5],[12,6],[14,2],[16,2],[18,1],[20,1],[22,3],[24,5],[28,6]].forEach(n => draw(n[0], n[1], 'synth'));
+                // Правильная Ёлочка по картинке пользователя: До(6), Ля(1), Ля(1), Соль(2), Ля(1), Фа(3), До(6)...
+                [[0,6],[2,1],[4,1],[6,2],[8,1],[10,3],[12,6],[14,6],[16,6],[18,1],[20,1],[22,0],[24,2],[28,6]].forEach(n => draw(n[0], n[1], 'synth'));
             } else if(type === 'kuznechik') {
                 state.steps = 32; state.tempo = 160;
                 for(let i=0; i<32; i++) draw(i, 0, 'cymbals', true);
@@ -351,7 +354,7 @@
         }
 
         async function exportWav() {
-            if(Object.keys(buffers).length === 0) { alert("Звуки еще загружаются..."); return; }
+            if(!audioCtx) { alert("Сначала запустите игру!"); return; }
             const dur = 10, sr = 44100;
             const offline = new (window.OfflineAudioContext || window.webkitOfflineAudioContext)(2, sr * dur, sr);
             const stepDur = (60 / state.tempo) / 4;
@@ -362,7 +365,7 @@
                     const id = state.grid[cur][r]; if(buffers[id]) { const src = offline.createBufferSource(); src.buffer = buffers[id]; src.playbackRate.value = RATES[r]; src.connect(offline.destination); src.start(time); }
                 });
                 if(state.rhy[cur]) {
-                    const id = state.rhy[cur]; if(buffers[id]) { const src = offline.createBufferSource(); src.buffer = buffers[id]; src.connect(offline.destination); src.start(time); }
+                    const id = state.rhy[cur]; if(buffers[id]) { const src = offline.createBufferSource(); src.buffer = buffers[id]; src.playbackRate.value = 1; src.connect(offline.destination); src.start(time); }
                 }
             }
             const rendered = await offline.startRendering();
@@ -381,6 +384,7 @@
             for (let i = 0; i < buffer.length; i++) for (let j = 0; j < n; j++) { let s = Math.max(-1, Math.min(1, buffer.getChannelData(j)[i])); view.setInt16(pos, s < 0 ? s * 0x8000 : s * 0x7FFF, true); pos += 2; }
             return new Blob([buffer2], {type: 'audio/wav'});
         }
+
         changeHero(0);
     </script>
 </body>
