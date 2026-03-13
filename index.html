@@ -64,10 +64,8 @@
         .cell-rhythm { height: 42px; border: 2px dashed #cbd5e1; border-radius: 10px; }
         .playhead-col { background: #cbd5e1 !important; border-color: #94a3b8; }
         
-        /* ТАКТЫ (Визуальное разделение каждые 4 шага) */
         .tact-gap { margin-left: 12px !important; }
 
-        /* ПАНЕЛЬ ИНСТРУМЕНТОВ */
         .bottom-stage { background: white; padding: 12px; border-radius: 25px 25px 0 0; box-shadow: 0 -5px 20px rgba(0,0,0,0.05); flex-shrink: 0; }
         .instrument-palette { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
         .inst-btn { 
@@ -85,7 +83,6 @@
         .inst-btn-kick.selected { border-color: var(--color-kick) !important; box-shadow: 0 8px 20px rgba(239,68,68,0.3); }
         .inst-btn-cymbals.selected { border-color: var(--color-cymbal) !important; box-shadow: 0 8px 20px rgba(234,179,8,0.3); }
         
-        /* АДАПТИВ */
         @media (max-width: 600px) {
             .hero-showcase { width: 200px; height: 200px; }
             .bottom-stage { padding: 10px; padding-bottom: calc(10px + env(safe-area-inset-bottom)); border-radius: 20px 20px 0 0; }
@@ -107,9 +104,10 @@
         @keyframes bounce { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1) translateY(-6px); } }
         .bounce { animation: bounce 0.2s ease; }
 
-        /* ОБУЧАЛКА (ОНБОРДИНГ) */
-        #tour-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.75); z-index: 999; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(2px); }
-        #tour-box { background: white; padding: 25px; border-radius: 25px; text-align: center; max-width: 320px; position: absolute; z-index: 1001; transition: all 0.3s ease; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
+        /* ИСПРАВЛЕННАЯ ОБУЧАЛКА */
+        #tour-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.75); z-index: 999; backdrop-filter: blur(2px); }
+        /* Окно вынесено в корень и позиционируется отдельно, чтобы его не перекрывали элементы с z-index 1000 */
+        #tour-box { display: none; background: white; padding: 25px; border-radius: 25px; text-align: center; width: 90%; max-width: 320px; position: fixed; left: 50%; transform: translateX(-50%); z-index: 1001; box-shadow: 0 20px 40px rgba(0,0,0,0.4); border: 2px solid #e2e8f0; transition: top 0.3s, bottom 0.3s, transform 0.3s; }
         .tour-highlight { position: relative; z-index: 1000 !important; background: white; box-shadow: 0 0 0 8px rgba(255,255,255,0.9), 0 0 30px 10px #3b82f6 !important; border-radius: inherit; pointer-events: none; }
     </style>
 </head>
@@ -164,14 +162,13 @@
         <div class="bottom-stage" id="tour-palette"><div id="palette" class="instrument-palette"></div></div>
     </div>
 
-    <div id="tour-overlay">
-        <div id="tour-box">
-            <h2 id="tour-title" style="margin-top:0; color:#1e293b;"></h2>
-            <p id="tour-text" style="color:#64748b; font-weight:600; line-height:1.4;"></p>
-            <div style="display:flex; justify-content:space-between; margin-top:20px;">
-                <button onclick="endTour()" style="background:none; border:none; color:#94a3b8; font-weight:bold; cursor:pointer;">Закрыть</button>
-                <button onclick="nextTourStep()" style="background:#3b82f6; color:white; border:none; padding:10px 25px; border-radius:15px; font-weight:bold; cursor:pointer;">Далее ❯</button>
-            </div>
+    <div id="tour-overlay"></div>
+    <div id="tour-box">
+        <h2 id="tour-title" style="margin-top:0; color:#1e293b;"></h2>
+        <p id="tour-text" style="color:#64748b; font-weight:600; line-height:1.4;"></p>
+        <div style="display:flex; justify-content:space-between; margin-top:20px;">
+            <button onclick="endTour()" style="background:none; border:none; color:#94a3b8; font-weight:bold; cursor:pointer;">Закрыть</button>
+            <button onclick="nextTourStep()" style="background:#3b82f6; color:white; border:none; padding:10px 25px; border-radius:15px; font-weight:bold; cursor:pointer;">Далее ❯</button>
         </div>
     </div>
 
@@ -193,13 +190,12 @@
         const RATES = [1.88, 1.682, 1.498, 1.335, 1.26, 1.122, 1.0];
         
         let state = { hero: 0, inst: 'guitar', grid: {}, rhy: {}, playing: false, step: 0, tempo: 120, steps: 16 };
-        let hasUnsavedChanges = false; // Отслеживает, есть ли правки пользователя
+        let hasUnsavedChanges = false;
 
         let audioCtx = null;
         let masterCompressor = null;
         let buffers = {}, activeNodes = {};
 
-        // ЗАГРУЗКА ИЗ ПАМЯТИ
         function initLocal() {
             try {
                 const saved = localStorage.getItem('zveroband-save');
@@ -270,7 +266,7 @@
             changeTempo(state.tempo);
             document.getElementById('stepSelect').value = state.steps;
             
-            checkTour(); // Проверка на обучение
+            checkTour(); 
         }
 
         function renderGame() {
@@ -282,7 +278,7 @@
                 
                 for(let c=0; c<state.steps; c++) {
                     const cell = document.createElement('div'); cell.className = 'cell'; cell.id = `m-${c}-${r}`;
-                    if(c % 4 === 0 && c !== 0) cell.classList.add('tact-gap'); // ТАКТЫ!
+                    if(c % 4 === 0 && c !== 0) cell.classList.add('tact-gap');
                     cell.onclick = () => { if(!state.playing && INSTS[state.inst].type === 'mel') toggleCell(c, r, 'mel'); };
                     if(state.grid[c] && state.grid[c][r]) cell.style.background = INSTS[state.grid[c][r]].color;
                     row.appendChild(cell);
@@ -295,7 +291,7 @@
             
             for(let c=0; c<state.steps; c++) {
                 const cell = document.createElement('div'); cell.className = 'cell cell-rhythm'; cell.id = `r-${c}`;
-                if(c % 4 === 0 && c !== 0) cell.classList.add('tact-gap'); // ТАКТЫ!
+                if(c % 4 === 0 && c !== 0) cell.classList.add('tact-gap');
                 cell.onclick = () => { if(!state.playing && INSTS[state.inst].type === 'rhy') toggleCell(c, 0, 'rhy'); };
                 if(state.rhy[c]) cell.style.background = INSTS[state.rhy[c]].color;
                 rRow.appendChild(cell);
@@ -379,7 +375,6 @@
             state.timer = setTimeout(loop, (60000/state.tempo)/4);
         }
 
-        // ФУНКЦИИ С ПОДТВЕРЖДЕНИЕМ
         function requestClearGrid() {
             if(Object.keys(state.grid).length === 0 && Object.keys(state.rhy).length === 0) return;
             if(hasUnsavedChanges) {
@@ -446,7 +441,7 @@
                 [[0,6],[1,6],[4,3],[5,3],[8,6],[9,6],[12,3],[13,3]].forEach(n => draw(n[0], n[1], 'synth'));
             }
 
-            hasUnsavedChanges = false; // Это пресет, его не страшно стирать
+            hasUnsavedChanges = false; 
             renderGame(); changeTempo(state.tempo); document.getElementById('stepSelect').value = state.steps; saveLocal();
         }
 
@@ -454,16 +449,17 @@
         function changeSteps(v) { state.steps = parseInt(v); renderGame(); saveLocal(); }
         function changeTempo(v) { state.tempo = parseInt(v); document.getElementById('bpmDisplay').innerText = v; saveLocal(); }
 
-        // ЛОГИКА ОБУЧЕНИЯ
+        // ИСПРАВЛЕННАЯ ЛОГИКА ОБУЧЕНИЯ
         let tourStep = 0;
         function checkTour() {
             if(!localStorage.getItem('music-game-tour-completed')) {
-                setTimeout(startTour, 500); // Небольшая задержка для плавности
+                setTimeout(startTour, 500); 
             }
         }
         function startTour() {
             tourStep = 0;
-            document.getElementById('tour-overlay').style.display = 'flex';
+            document.getElementById('tour-overlay').style.display = 'block';
+            document.getElementById('tour-box').style.display = 'block';
             nextTourStep();
         }
         function nextTourStep() {
@@ -472,21 +468,22 @@
             const title = document.getElementById('tour-title');
             const text = document.getElementById('tour-text');
             
+            // Динамическое позиционирование в процентах, чтобы никогда не перекрывало подсветку!
             if(tourStep === 0) {
                 title.innerText = 'Инструменты 🎸';
                 text.innerText = 'Выбирай любой инструмент на этой панели. Музыкальные ставятся наверх, а барабаны — вниз!';
                 document.getElementById('tour-palette').classList.add('tour-highlight');
-                box.style.bottom = '180px'; box.style.top = 'auto';
+                box.style.top = '15%'; box.style.bottom = 'auto'; box.style.transform = 'translateX(-50%)';
             } else if(tourStep === 1) {
                 title.innerText = 'Ноты 🎵';
                 text.innerText = 'Нажимай на клеточки, чтобы нарисовать свою мелодию. Обрати внимание: таблица разделена на такты (по 4 шага), чтобы было проще ловить ритм!';
                 document.getElementById('tour-grid').classList.add('tour-highlight');
-                box.style.top = '120px'; box.style.bottom = 'auto';
+                box.style.top = 'auto'; box.style.bottom = '5%'; box.style.transform = 'translateX(-50%)';
             } else if(tourStep === 2) {
                 title.innerText = 'Слушай хит! ▶️';
                 text.innerText = 'Жми ИГРАТЬ, чтобы послушать результат. А если захочешь сохранить трек — жми на дискету!';
                 document.getElementById('btnPlay').classList.add('tour-highlight');
-                box.style.top = '160px'; box.style.bottom = 'auto';
+                box.style.top = '50%'; box.style.bottom = 'auto'; box.style.transform = 'translate(-50%, -50%)';
             } else {
                 endTour();
                 return;
@@ -495,6 +492,7 @@
         }
         function endTour() {
             document.getElementById('tour-overlay').style.display = 'none';
+            document.getElementById('tour-box').style.display = 'none';
             document.querySelectorAll('.tour-highlight').forEach(el => el.classList.remove('tour-highlight'));
             localStorage.setItem('music-game-tour-completed', '1');
         }
@@ -535,7 +533,7 @@
             return new Blob([buffer2], {type: 'audio/wav'});
         }
         
-        initLocal(); // Запускаем загрузку из памяти при старте
+        initLocal(); 
     </script>
 </body>
 </html>
