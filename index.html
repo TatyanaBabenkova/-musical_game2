@@ -13,7 +13,7 @@
         * { box-sizing: border-box; touch-action: manipulation; }
         body { margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; background-color: var(--bg-color); color: var(--text-color); display: flex; flex-direction: column; height: 100dvh; overflow: hidden; }
         
-        /* ЭКРАН 1: С КАРТИНКОЙ BG.PNG И ОПИСАНИЕМ */
+        /* ЭКРАН 1 */
         #screen-start { 
             display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; 
             text-align: center; background: url('img/bg.png') no-repeat center center/cover; padding: 20px; 
@@ -37,7 +37,7 @@
         .carousel-wrap { display: flex; align-items: center; gap: 15px; }
         .nav-btn { background: rgba(241,245,249,0.9); border: none; border-radius: 50%; width: 45px; height: 45px; font-size: 22px; color: #3b82f6; cursor: pointer; display:flex; align-items:center; justify-content:center; }
 
-        /* ЭКРАН 2: ИГРА И СЕТКА */
+        /* ЭКРАН 2 */
         #screen-game { display: none; flex-direction: column; height: 100%; padding: 10px; }
         .presets-carousel { display: flex; overflow-x: auto; gap: 8px; padding-bottom: 8px; flex: 0 0 auto; scrollbar-width: none; }
         .preset-btn { flex: 0 0 auto; padding: 10px 16px; border-radius: 20px; background: var(--card-bg); border: 2px solid #e2e8f0; font-weight: 800; font-size: 12px; cursor: pointer; }
@@ -63,6 +63,9 @@
         .cell { width: 40px; height: 32px; background: white; border-radius: 6px; border: 1px solid #e2e8f0; cursor: pointer; flex-shrink: 0; }
         .cell-rhythm { height: 42px; border: 2px dashed #cbd5e1; border-radius: 10px; }
         .playhead-col { background: #cbd5e1 !important; border-color: #94a3b8; }
+        
+        /* ТАКТЫ (Визуальное разделение каждые 4 шага) */
+        .tact-gap { margin-left: 12px !important; }
 
         /* ПАНЕЛЬ ИНСТРУМЕНТОВ */
         .bottom-stage { background: white; padding: 12px; border-radius: 25px 25px 0 0; box-shadow: 0 -5px 20px rgba(0,0,0,0.05); flex-shrink: 0; }
@@ -75,7 +78,6 @@
         
         .inst-img { width: 60px; height: 60px; object-fit: contain; }
 
-        /* РАЗНОЦВЕТНОЕ ВЫДЕЛЕНИЕ */
         .inst-btn.selected { background: #ffffff !important; transform: scale(1.05); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
         .inst-btn-guitar.selected { border-color: var(--color-guitar) !important; box-shadow: 0 8px 20px rgba(59,130,246,0.3); }
         .inst-btn-trumpet.selected { border-color: var(--color-trumpet) !important; box-shadow: 0 8px 20px rgba(168,85,247,0.3); }
@@ -83,21 +85,19 @@
         .inst-btn-kick.selected { border-color: var(--color-kick) !important; box-shadow: 0 8px 20px rgba(239,68,68,0.3); }
         .inst-btn-cymbals.selected { border-color: var(--color-cymbal) !important; box-shadow: 0 8px 20px rgba(234,179,8,0.3); }
         
-        /* АДАПТИВ ДЛЯ ТЕЛЕФОНА */
+        /* АДАПТИВ */
         @media (max-width: 600px) {
             .hero-showcase { width: 200px; height: 200px; }
             .bottom-stage { padding: 10px; padding-bottom: calc(10px + env(safe-area-inset-bottom)); border-radius: 20px 20px 0 0; }
             .instrument-palette { gap: 5px; } 
             .inst-btn { flex: 0 0 calc(33.33% - 5px); max-width: 115px; border-radius: 16px; padding: 4px; } 
             .inst-img { width: 80px; height: 80px; } 
-            
             .cell { width: 34px; height: 28px; }
             .cell-label { width: 36px; font-size: 8px; }
             .start-header h1 { font-size: 26px; }
             .btn-start { padding: 16px 40px; font-size: 20px; }
         }
         
-        /* АДАПТИВ ДЛЯ КОМПЬЮТЕРА */
         @media (min-width: 800px) {
             .inst-btn { flex: 0 0 160px; max-width: 180px; border-radius: 30px; padding: 15px; }
             .inst-img { width: 130px; height: 130px; }
@@ -106,6 +106,11 @@
         .settings-menu { display: none; position: absolute; top: 120px; right: 10px; background: white; padding: 15px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); border: 2px solid #e2e8f0; z-index: 100; flex-direction: column; gap: 10px; }
         @keyframes bounce { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1) translateY(-6px); } }
         .bounce { animation: bounce 0.2s ease; }
+
+        /* ОБУЧАЛКА (ОНБОРДИНГ) */
+        #tour-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.75); z-index: 999; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(2px); }
+        #tour-box { background: white; padding: 25px; border-radius: 25px; text-align: center; max-width: 320px; position: absolute; z-index: 1001; transition: all 0.3s ease; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
+        .tour-highlight { position: relative; z-index: 1000 !important; background: white; box-shadow: 0 0 0 8px rgba(255,255,255,0.9), 0 0 30px 10px #3b82f6 !important; border-radius: inherit; pointer-events: none; }
     </style>
 </head>
 <body>
@@ -129,33 +134,45 @@
 
     <div id="screen-game">
         <div class="presets-carousel" id="presets-container">
-            <button class="preset-btn" onclick="loadPreset('yolochka')">🎄 Ёлочка</button>
-            <button class="preset-btn" onclick="loadPreset('kuznechik')">🦗 Кузнечик</button>
-            <button class="preset-btn" onclick="loadPreset('twinkle')">⭐ Звездочка</button>
-            <button class="preset-btn" onclick="loadPreset('dance')">🪩 Клуб</button>
-            <button class="preset-btn" onclick="loadPreset('rock')">🤘 Рок</button>
-            <button class="preset-btn" onclick="loadPreset('ufo')">🛸 НЛО</button>
-            <button class="preset-btn" onclick="loadPreset('train')">🚂 Паровоз</button>
-            <button class="preset-btn" onclick="loadPreset('chizhik')">🐦 Чижик</button>
-            <button class="preset-btn" onclick="loadPreset('gusi')">🦢 Гуси</button>
-            <button class="preset-btn" onclick="loadPreset('pop')">🌟 Попса</button>
+            <button class="preset-btn" onclick="requestPresetLoad('yolochka')">🎄 Ёлочка</button>
+            <button class="preset-btn" onclick="requestPresetLoad('kuznechik')">🦗 Кузнечик</button>
+            <button class="preset-btn" onclick="requestPresetLoad('twinkle')">⭐ Звездочка</button>
+            <button class="preset-btn" onclick="requestPresetLoad('dance')">🪩 Клуб</button>
+            <button class="preset-btn" onclick="requestPresetLoad('rock')">🤘 Рок</button>
+            <button class="preset-btn" onclick="requestPresetLoad('ufo')">🛸 НЛО</button>
+            <button class="preset-btn" onclick="requestPresetLoad('train')">🚂 Паровоз</button>
+            <button class="preset-btn" onclick="requestPresetLoad('chizhik')">🐦 Чижик</button>
+            <button class="preset-btn" onclick="requestPresetLoad('gusi')">🦢 Гуси</button>
+            <button class="preset-btn" onclick="requestPresetLoad('pop')">🌟 Попса</button>
         </div>
         <div class="top-controls">
+            <button class="btn-icon" onclick="goHome()" title="На главную">🏠</button>
             <button class="btn-play" id="btnPlay" onclick="togglePlay()">▶ ИГРАТЬ</button>
-            <button class="btn-icon" onclick="exportWav()">💾</button>
-            <button class="btn-icon" onclick="toggleSettings()">⚙️</button>
-            <button class="btn-icon" onclick="clearGrid()">🗑️</button>
+            <button class="btn-icon" onclick="exportWav()" title="Сохранить">💾</button>
+            <button class="btn-icon" onclick="toggleSettings()" title="Настройки">⚙️</button>
+            <button class="btn-icon" onclick="requestClearGrid()" title="Очистить">🗑️</button>
         </div>
         <div class="settings-menu" id="settingsMenu">
             <label>Длина: <select id="stepSelect" onchange="changeSteps(this.value)"><option value="16">16 шагов</option><option value="32">32 шага</option></select></label>
             <label>Скорость: <input type="range" min="60" max="200" value="120" oninput="changeTempo(this.value)"><span id="bpmDisplay">120</span></label>
         </div>
-        <div class="grid-wrap">
+        <div class="grid-wrap" id="tour-grid">
             <div id="melGrid" class="grid-section"></div>
             <div style="height:4px; background:#cbd5e1; min-width:100%; margin:6px 0; border-radius:2px;"></div>
             <div id="rhyGrid" class="grid-section"></div>
         </div>
-        <div class="bottom-stage"><div id="palette" class="instrument-palette"></div></div>
+        <div class="bottom-stage" id="tour-palette"><div id="palette" class="instrument-palette"></div></div>
+    </div>
+
+    <div id="tour-overlay">
+        <div id="tour-box">
+            <h2 id="tour-title" style="margin-top:0; color:#1e293b;"></h2>
+            <p id="tour-text" style="color:#64748b; font-weight:600; line-height:1.4;"></p>
+            <div style="display:flex; justify-content:space-between; margin-top:20px;">
+                <button onclick="endTour()" style="background:none; border:none; color:#94a3b8; font-weight:bold; cursor:pointer;">Закрыть</button>
+                <button onclick="nextTourStep()" style="background:#3b82f6; color:white; border:none; padding:10px 25px; border-radius:15px; font-weight:bold; cursor:pointer;">Далее ❯</button>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -174,42 +191,86 @@
         };
         const NOTES = ["СИ", "ЛЯ", "СОЛЬ", "ФА", "МИ", "РЕ", "ДО"];
         const RATES = [1.88, 1.682, 1.498, 1.335, 1.26, 1.122, 1.0];
-        let state = { hero: 0, inst: 'guitar', grid: {}, rhy: {}, playing: false, step: 0, tempo: 120, steps: 16 };
         
+        let state = { hero: 0, inst: 'guitar', grid: {}, rhy: {}, playing: false, step: 0, tempo: 120, steps: 16 };
+        let hasUnsavedChanges = false; // Отслеживает, есть ли правки пользователя
+
         let audioCtx = null;
-        let masterCompressor = null; // Глобальный лимитер
+        let masterCompressor = null;
         let buffers = {}, activeNodes = {};
+
+        // ЗАГРУЗКА ИЗ ПАМЯТИ
+        function initLocal() {
+            try {
+                const saved = localStorage.getItem('zveroband-save');
+                if(saved) {
+                    const p = JSON.parse(saved);
+                    if(p.hero !== undefined) state.hero = p.hero;
+                    if(p.grid) state.grid = p.grid;
+                    if(p.rhy) state.rhy = p.rhy;
+                    if(p.steps) state.steps = p.steps;
+                    if(p.tempo) state.tempo = p.tempo;
+                    if(Object.keys(state.grid).length > 0 || Object.keys(state.rhy).length > 0) hasUnsavedChanges = true;
+                }
+            } catch(e) {}
+            updateCarousel();
+        }
+
+        function saveLocal() {
+            try {
+                localStorage.setItem('zveroband-save', JSON.stringify({
+                    grid: state.grid, rhy: state.rhy, steps: state.steps, tempo: state.tempo, hero: state.hero
+                }));
+            } catch(e) {}
+        }
 
         function changeHero(dir) {
             state.hero = (state.hero + dir + HEROES.length) % HEROES.length;
+            updateCarousel();
+            saveLocal();
+        }
+
+        function updateCarousel() {
             document.getElementById('startImg').src = `img/${HEROES[state.hero].id}_base.png`;
             document.getElementById('heroName').innerText = HEROES[state.hero].name;
             document.getElementById('heroDesc').innerText = HEROES[state.hero].desc;
+        }
+
+        function goHome() {
+            if(state.playing) togglePlay();
+            document.getElementById('screen-game').style.display = 'none';
+            document.getElementById('screen-start').style.display = 'flex';
         }
 
         async function startGame() {
             document.getElementById('screen-start').style.display = 'none';
             document.getElementById('screen-game').style.display = 'flex';
             
-            const AudioContext = window.AudioContext || window.webkitAudioContext;
-            audioCtx = new AudioContext();
+            if(!audioCtx) {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                audioCtx = new AudioContext();
+                
+                masterCompressor = audioCtx.createDynamicsCompressor();
+                masterCompressor.threshold.setValueAtTime(-15, audioCtx.currentTime);
+                masterCompressor.knee.setValueAtTime(30, audioCtx.currentTime);
+                masterCompressor.ratio.setValueAtTime(12, audioCtx.currentTime);
+                masterCompressor.attack.setValueAtTime(0.003, audioCtx.currentTime);
+                masterCompressor.release.setValueAtTime(0.25, audioCtx.currentTime);
+                masterCompressor.connect(audioCtx.destination);
+                
+                Object.keys(INSTS).forEach(k => {
+                    fetch(`sounds/${INSTS[k].file}`).then(r => r.arrayBuffer()).then(ab => audioCtx.decodeAudioData(ab, b => buffers[k] = b)).catch(() => {});
+                });
+            }
+            
             if (audioCtx.state === 'suspended') await audioCtx.resume();
             
-            // Настройка Мастер-Компрессора от перегруза на телефонах
-            masterCompressor = audioCtx.createDynamicsCompressor();
-            masterCompressor.threshold.setValueAtTime(-15, audioCtx.currentTime);
-            masterCompressor.knee.setValueAtTime(30, audioCtx.currentTime);
-            masterCompressor.ratio.setValueAtTime(12, audioCtx.currentTime);
-            masterCompressor.attack.setValueAtTime(0.003, audioCtx.currentTime);
-            masterCompressor.release.setValueAtTime(0.25, audioCtx.currentTime);
-            masterCompressor.connect(audioCtx.destination);
-            
-            Object.keys(INSTS).forEach(k => {
-                fetch(`sounds/${INSTS[k].file}`).then(r => r.arrayBuffer()).then(ab => audioCtx.decodeAudioData(ab, b => buffers[k] = b)).catch(() => {});
-            });
-
             renderGame();
             selectInstrument('guitar');
+            changeTempo(state.tempo);
+            document.getElementById('stepSelect').value = state.steps;
+            
+            checkTour(); // Проверка на обучение
         }
 
         function renderGame() {
@@ -218,18 +279,23 @@
             for(let r=0; r<7; r++) {
                 const row = document.createElement('div'); row.className = 'grid-row';
                 const label = document.createElement('div'); label.className = 'cell-label'; label.innerText = NOTES[r]; row.appendChild(label);
+                
                 for(let c=0; c<state.steps; c++) {
                     const cell = document.createElement('div'); cell.className = 'cell'; cell.id = `m-${c}-${r}`;
+                    if(c % 4 === 0 && c !== 0) cell.classList.add('tact-gap'); // ТАКТЫ!
                     cell.onclick = () => { if(!state.playing && INSTS[state.inst].type === 'mel') toggleCell(c, r, 'mel'); };
                     if(state.grid[c] && state.grid[c][r]) cell.style.background = INSTS[state.grid[c][r]].color;
                     row.appendChild(cell);
                 }
                 mel.appendChild(row);
             }
+            
             const rRow = document.createElement('div'); rRow.className = 'grid-row';
             const rLabel = document.createElement('div'); rLabel.className = 'cell-label'; rLabel.innerText = "РИТМ"; rRow.appendChild(rLabel);
+            
             for(let c=0; c<state.steps; c++) {
                 const cell = document.createElement('div'); cell.className = 'cell cell-rhythm'; cell.id = `r-${c}`;
+                if(c % 4 === 0 && c !== 0) cell.classList.add('tact-gap'); // ТАКТЫ!
                 cell.onclick = () => { if(!state.playing && INSTS[state.inst].type === 'rhy') toggleCell(c, 0, 'rhy'); };
                 if(state.rhy[c]) cell.style.background = INSTS[state.rhy[c]].color;
                 rRow.appendChild(cell);
@@ -243,8 +309,7 @@
             const h = HEROES[state.hero];
             Object.keys(INSTS).forEach(k => {
                 const btn = document.createElement('button'); 
-                btn.className = `inst-btn inst-btn-${k}`; 
-                btn.id = `btn-${k}`;
+                btn.className = `inst-btn inst-btn-${k}`; btn.id = `btn-${k}`;
                 if(state.inst === k && !state.playing) btn.classList.add('selected');
                 btn.onclick = () => selectInstrument(k);
                 const iconMap = {guitar:'guitar', trumpet:'trumpet', synth:'synth', kick:'drum', cymbals:'cymbals'};
@@ -259,6 +324,7 @@
             const active = document.getElementById(`btn-${id}`); if(active && !state.playing) active.classList.add('selected');
             document.getElementById('melGrid').style.opacity = INSTS[id].type === 'mel' ? 1 : 0.2;
             document.getElementById('rhyGrid').style.opacity = INSTS[id].type === 'rhy' ? 1 : 0.2;
+            saveLocal();
         }
 
         function toggleCell(c, r, type) {
@@ -271,22 +337,17 @@
                 if(state.rhy[c]) { delete state.rhy[c]; document.getElementById(`r-${c}`).style.background = ''; }
                 else { state.rhy[c] = id; document.getElementById(`r-${c}`).style.background = INSTS[id].color; playSound(id, 1); bounce(id); }
             }
+            hasUnsavedChanges = true;
+            saveLocal();
         }
 
         function playSound(k, r) {
             if(!audioCtx || !buffers[k]) return;
             const t = audioCtx.currentTime;
             if(activeNodes[k]) { try { activeNodes[k].stop(t+0.05); } catch(e){} }
-            
             const s = audioCtx.createBufferSource(); s.buffer = buffers[k]; s.playbackRate.value = r;
-            const g = audioCtx.createGain(); 
-            // Чуть снижаем громкость отдельной ноты для чистоты звука
-            g.gain.setValueAtTime(0.5, t); 
-            g.gain.exponentialRampToValueAtTime(0.01, t + 0.5);
-            
-            s.connect(g); 
-            g.connect(masterCompressor); // Звук идет в компрессор!
-            s.start(); activeNodes[k] = s;
+            const g = audioCtx.createGain(); g.gain.setValueAtTime(0.5, t); g.gain.exponentialRampToValueAtTime(0.01, t + 0.5);
+            s.connect(g); g.connect(masterCompressor); s.start(); activeNodes[k] = s;
         }
 
         function bounce(id) { const b = document.getElementById(`btn-${id}`); if(b) { b.classList.remove('bounce'); void b.offsetWidth; b.classList.add('bounce'); } }
@@ -318,13 +379,29 @@
             state.timer = setTimeout(loop, (60000/state.tempo)/4);
         }
 
-        function clearGrid() { state.grid = {}; state.rhy = {}; renderGame(); }
-        function toggleSettings() { const s = document.getElementById('settingsMenu'); s.style.display = s.style.display === 'flex' ? 'none' : 'flex'; }
-        function changeSteps(v) { state.steps = parseInt(v); renderGame(); }
-        function changeTempo(v) { state.tempo = parseInt(v); document.getElementById('bpmDisplay').innerText = v; }
+        // ФУНКЦИИ С ПОДТВЕРЖДЕНИЕМ
+        function requestClearGrid() {
+            if(Object.keys(state.grid).length === 0 && Object.keys(state.rhy).length === 0) return;
+            if(hasUnsavedChanges) {
+                if(!confirm('Очистить поле? Твоя мелодия пропадет навсегда!')) return;
+            }
+            clearGrid();
+        }
+
+        function clearGrid() { 
+            state.grid = {}; state.rhy = {}; 
+            hasUnsavedChanges = false; saveLocal(); renderGame(); 
+        }
+
+        function requestPresetLoad(type) {
+            if(hasUnsavedChanges) {
+                if(!confirm('Загрузить новую песню? Твой текущий шедевр пропадет!')) return;
+            }
+            loadPreset(type);
+        }
 
         function loadPreset(type) {
-            clearGrid();
+            state.grid = {}; state.rhy = {};
             const draw = (c, r, inst, isRhy=false) => { if(!isRhy) { state.grid[c] = state.grid[c] || {}; state.grid[c][r] = inst; } else { state.rhy[c] = inst; } };
             
             if(type === 'yolochka') {
@@ -369,15 +446,63 @@
                 [[0,6],[1,6],[4,3],[5,3],[8,6],[9,6],[12,3],[13,3]].forEach(n => draw(n[0], n[1], 'synth'));
             }
 
-            renderGame(); changeTempo(state.tempo); document.getElementById('stepSelect').value = state.steps;
+            hasUnsavedChanges = false; // Это пресет, его не страшно стирать
+            renderGame(); changeTempo(state.tempo); document.getElementById('stepSelect').value = state.steps; saveLocal();
+        }
+
+        function toggleSettings() { const s = document.getElementById('settingsMenu'); s.style.display = s.style.display === 'flex' ? 'none' : 'flex'; }
+        function changeSteps(v) { state.steps = parseInt(v); renderGame(); saveLocal(); }
+        function changeTempo(v) { state.tempo = parseInt(v); document.getElementById('bpmDisplay').innerText = v; saveLocal(); }
+
+        // ЛОГИКА ОБУЧЕНИЯ
+        let tourStep = 0;
+        function checkTour() {
+            if(!localStorage.getItem('music-game-tour-completed')) {
+                setTimeout(startTour, 500); // Небольшая задержка для плавности
+            }
+        }
+        function startTour() {
+            tourStep = 0;
+            document.getElementById('tour-overlay').style.display = 'flex';
+            nextTourStep();
+        }
+        function nextTourStep() {
+            document.querySelectorAll('.tour-highlight').forEach(el => el.classList.remove('tour-highlight'));
+            const box = document.getElementById('tour-box');
+            const title = document.getElementById('tour-title');
+            const text = document.getElementById('tour-text');
+            
+            if(tourStep === 0) {
+                title.innerText = 'Инструменты 🎸';
+                text.innerText = 'Выбирай любой инструмент на этой панели. Музыкальные ставятся наверх, а барабаны — вниз!';
+                document.getElementById('tour-palette').classList.add('tour-highlight');
+                box.style.bottom = '180px'; box.style.top = 'auto';
+            } else if(tourStep === 1) {
+                title.innerText = 'Ноты 🎵';
+                text.innerText = 'Нажимай на клеточки, чтобы нарисовать свою мелодию. Обрати внимание: таблица разделена на такты (по 4 шага), чтобы было проще ловить ритм!';
+                document.getElementById('tour-grid').classList.add('tour-highlight');
+                box.style.top = '120px'; box.style.bottom = 'auto';
+            } else if(tourStep === 2) {
+                title.innerText = 'Слушай хит! ▶️';
+                text.innerText = 'Жми ИГРАТЬ, чтобы послушать результат. А если захочешь сохранить трек — жми на дискету!';
+                document.getElementById('btnPlay').classList.add('tour-highlight');
+                box.style.top = '160px'; box.style.bottom = 'auto';
+            } else {
+                endTour();
+                return;
+            }
+            tourStep++;
+        }
+        function endTour() {
+            document.getElementById('tour-overlay').style.display = 'none';
+            document.querySelectorAll('.tour-highlight').forEach(el => el.classList.remove('tour-highlight'));
+            localStorage.setItem('music-game-tour-completed', '1');
         }
 
         async function exportWav() {
             if(!audioCtx) { alert("Сначала запустите игру!"); return; }
             const dur = 10, sr = 44100;
             const offline = new (window.OfflineAudioContext || window.webkitOfflineAudioContext)(2, sr * dur, sr);
-            
-            // Компрессор для сохранения
             const offlineComp = offline.createDynamicsCompressor();
             offlineComp.threshold.setValueAtTime(-10, 0);
             offlineComp.connect(offline.destination);
@@ -409,7 +534,8 @@
             for (let i = 0; i < buffer.length; i++) for (let j = 0; j < n; j++) { let s = Math.max(-1, Math.min(1, buffer.getChannelData(j)[i])); view.setInt16(pos, s < 0 ? s * 0x8000 : s * 0x7FFF, true); pos += 2; }
             return new Blob([buffer2], {type: 'audio/wav'});
         }
-        changeHero(0);
+        
+        initLocal(); // Запускаем загрузку из памяти при старте
     </script>
 </body>
 </html>
