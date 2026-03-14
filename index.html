@@ -191,7 +191,8 @@
             cymbals: {id:'cymbals', type:'rhy', color:'#eab308', file:'cymbal.wav'}
         };
         const NOTES = ["СИ", "ЛЯ", "СОЛЬ", "ФА", "МИ", "РЕ", "ДО"];
-        const RATES = [1.88, 1.682, 1.498, 1.335, 1.26, 1.122, 1.0];
+       // const RATES = [1.888, 1.682, 1.498, 1.335, 1.26, 1.122, 1.0];
+        const RATES = [1.8877, 1.6818, 1.4983, 1.3348, 1.2599, 1.1225, 1.0];
         
         let state = { hero: 0, inst: 'guitar', grid: {}, rhy: {}, playing: false, step: 0, tempo: 120, steps: 16 };
         let hasUnsavedChanges = false;
@@ -429,15 +430,15 @@
             if(type === 'yolochka') {
                 state.steps = 32; state.tempo = 100;
                 for(let i=0; i<32; i+=4) { draw(i, 0, 'kick', true); draw(i+2, 0, 'cymbals', true); }
-                [[0,6],[2,1],[4,1],[6,2],[8,1],[10,3],[12,6],[14,6],[16,6],[18,1],[20,1],[22,0],[24,2],[28,6]].forEach(n => draw(n[0], n[1], 'synth'));
+                [[0,6],[2,1],[4,1],[6,2],[8,1],[10,3],[12,6],[14,6],[16,6],[18,1],[20,1],[22,2],[24,2],[28,6]].forEach(n => draw(n[0], n[1], 'synth'));
             } else if(type === 'kuznechik') {
                 state.steps = 32; state.tempo = 160;
                 for(let i=0; i<32; i++) draw(i, 0, 'cymbals', true);
-                [[0,4],[2,6],[4,4],[6,6],[8,4],[10,5],[12,5],[14,5],[16,5],[18,4],[20,5],[22,4],[24,5],[26,6],[28,6]].forEach(n => draw(n[0], n[1], 'guitar'));
+                [[0,4],[2,6],[4,4],[6,6],[8,4],[10,5],[12,4],[14,3],[16,4],[18,5],[20,4],[22,3],[24,4],[26,6],[28,6]].forEach(n => draw(n[0], n[1], 'guitar'));
             } else if(type === 'twinkle') {
                 state.steps = 32; state.tempo = 90;
                 for(let i=0; i<32; i+=4) { draw(i, 0, 'kick', true); draw(i+1, 0, 'cymbals', true); draw(i+2, 0, 'kick', true); draw(i+3, 0, 'cymbals', true); }
-                [[0,6],[2,6],[4,2],[6,2],[8,1],[10,1],[12,2],[16,3],[18,3],[20,4],[22,4],[24,5],[26,5],[28,6]].forEach(n => draw(n[0], n[1], 'trumpet'));
+                [[0,6],[2,6],[4,2],[6,2],[8,1],[10,1],[12,2],[16,3],[18,3],[20,4],[22,4],[24,3],[26,2],[28,6]].forEach(n => draw(n[0], n[1], 'trumpet'));
             } else if(type === 'ufo') {
                 state.steps = 16; state.tempo = 120;
                 draw(0, 0, 'kick', true); draw(8, 0, 'kick', true);
@@ -450,18 +451,18 @@
             } else if(type === 'rock') {
                 state.steps = 16; state.tempo = 130;
                 for(let i=0; i<16; i+=4) { draw(i, 0, 'kick', true); draw(i+2, 0, 'kick', true); draw(i+3, 0, 'cymbals', true); }
-                [[0,6],[1,6],[3,5],[4,6],[5,6],[7,5]].forEach(n => draw(n[0], n[1], 'guitar'));
+                [[0,4],[2,4],[4,4],[6,4],[8,4],[10,4],[12,4],[14,2],[16,6],[18,5],[20,4]].forEach(n => draw(n[0], n[1], 'guitar'));
             } else if(type === 'dance') {
                 state.steps = 16; state.tempo = 128;
                 for(let i=0; i<16; i+=4) draw(i, 0, 'kick', true);
                 [[2,3],[6,3],[10,3],[14,3]].forEach(n => draw(n[0], n[1], 'synth'));
             } else if(type === 'chizhik') {
                 state.steps = 16; state.tempo = 110;
-                [[0,4],[2,6],[4,4],[6,6],[8,3],[10,4],[12,5],[14,2]].forEach(n => draw(n[0], n[1], 'synth'));
+                [[0,4],[2,2],[4,4],[6,2],[8,3],[10,4],[12,5],[14,6]].forEach(n => draw(n[0], n[1], 'synth'));
             } else if(type === 'gusi') {
                 state.steps = 32; state.tempo = 120;
                 [0,4,8,12,16,20,24,28].forEach(i => draw(i, 0, 'kick', true));
-                [[0,3],[2,4],[4,5],[6,6],[8,2],[10,2],[16,3],[18,4],[20,5],[22,6],[24,2],[26,2]].forEach(n => draw(n[0], n[1], 'guitar'));
+                [[0,2],[2,2],[4,1],[6,2],[8,4],[10,4],[12,3],[14,4],[16,2],[18,2],[20,1],[22,2],[24,4],[26,4]].forEach(n => draw(n[0], n[1], 'guitar'));
             } else if(type === 'pop') {
                 state.steps = 16; state.tempo = 120;
                 for(let i=0; i<16; i+=4) { draw(i, 0, 'kick', true); draw(i+2, 0, 'kick', true); }
