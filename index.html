@@ -266,7 +266,26 @@
             }
             
             if (audioCtx.state === 'suspended') await audioCtx.resume();
+            / --- НАЧАЛО: ЗВУК ДЛЯ IPHONE (SAFARI) ---
+            try {
+                // Создаем искусственный звук
+                const osc = audioCtx.createOscillator();
+                const silentGain = audioCtx.createGain();
+                silentGain.gain.value = 0; // Убираем громкость в ноль (человек ничего не услышит)
+                osc.connect(silentGain);
+                silentGain.connect(audioCtx.destination);
+                osc.start(); // Запускаем
+                osc.stop(audioCtx.currentTime + 0.01); // Останавливаем через долю секунды
+            } catch(e) { console.log('Audio unlock error:', e); }
+            // --- КОНЕЦ ---
+
+            renderGame();
+            selectInstrument('guitar');
+            changeTempo(state.tempo);
+            document.getElementById('stepSelect').value = state.steps;
             
+            checkTour(); 
+        }
             renderGame();
             selectInstrument('guitar');
             changeTempo(state.tempo);
