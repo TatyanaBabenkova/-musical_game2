@@ -511,22 +511,22 @@
             
             if(tourStep === 0) {
                 title.innerText = 'Инструменты 🎸';
-                text.innerText = 'Выбирай любой инструмент внизу экрана. Музыкальные ставятся наверх, а барабаны — вниз!';
+                text.innerText = 'Выбирай любой инструмент внизу экрана. Музыкальные ставятся наверх, а&nbsp;барабаны&nbsp;&mdash; вниз!';
                 document.getElementById('palette').classList.add('tour-highlight');
                 box.style.top = '15%'; box.style.bottom = 'auto'; box.style.transform = 'translateX(-50%)';
             } else if(tourStep === 1) {
                 title.innerText = 'Ноты 🎵';
-                text.innerText = 'Нажимай на клеточки, чтобы нарисовать свою мелодию. Таблица разделена на такты, чтобы было проще ловить ритм!';
+                text.innerText = 'Нажимай на&nbsp;клеточки, чтобы нарисовать свою мелодию. Таблица разделена на&nbsp;такты, чтобы было проще ловить ритм!';
                 document.getElementById('tour-grid').classList.add('tour-highlight');
                 box.style.top = 'auto'; box.style.bottom = '5%'; box.style.transform = 'translateX(-50%)';
             } else if(tourStep === 2) {
                 title.innerText = 'Готовые хиты 🎧';
-                text.innerText = 'Здесь можно выбрать уже готовую песню. Послушай, как они звучат, и попробуй изменить их!';
+                text.innerText = 'Здесь можно выбрать уже готовую песню. Послушай, как они звучат, и&nbsp;попробуй изменить&nbsp;их!';
                 document.getElementById('presets-container').classList.add('tour-highlight');
                 box.style.top = '30%'; box.style.bottom = 'auto'; box.style.transform = 'translateX(-50%)';
             } else if(tourStep === 3) {
                 title.innerText = 'Слушай и сохраняй! ▶️💾';
-                text.innerText = 'Жми ИГРАТЬ, чтобы послушать результат. А если захочешь скачать трек на телефон — жми на дискету!';
+                text.innerText = 'Жми ИГРАТЬ, чтобы послушать результат. А&nbsp;если захочешь скачать трек на&nbsp;телефон&nbsp;&mdash; жми на&nbsp;дискету!';
                 document.getElementById('tour-controls').classList.add('tour-highlight');
                 box.style.top = '50%'; box.style.bottom = 'auto'; box.style.transform = 'translate(-50%, -50%)';
             } else {
