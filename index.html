@@ -442,7 +442,7 @@
             if(type === 'yolochka') {
                 state.steps = 32; state.tempo = 100;
                 for(let i=0; i<32; i+=4) { draw(i, 0, 'kick', true); draw(i+2, 0, 'kick', true); }
-                [[0,2],[2,4],[4,4],[6,2],[8,4],[10,4],[12,5],[14,4],[16,3],[18,2],[20,1]].forEach(n => draw(n[0], n[1], 'trumpet'));
+                [[0,2],[2,4],[4,4],[6,2],[8,4],[10,4],[12,2],[14,3],[16,4],[18,5],[20,6]].forEach(n => draw(n[0], n[1], 'synth'));
             } else if(type === 'kuznechik') {
                 state.steps = 32; state.tempo = 140;
                 for(let i=0; i<32; i+=4) {draw(i,0,'kick',true);     };
