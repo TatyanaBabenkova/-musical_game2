@@ -441,8 +441,8 @@
             
             if(type === 'yolochka') {
                 state.steps = 32; state.tempo = 100;
-                for(let i=0; i<32; i+=4) { draw(i, 0, 'kick', true); draw(i+2, 0, 'cymbals', true); }
-                [[0,6],[2,1],[4,1],[6,2],[8,1],[10,3],[12,6],[14,6],[16,6],[18,1],[20,1],[22,2],[24,1],[26,1]].forEach(n => draw(n[0], n[1], 'trumpet'));
+                for(let i=0; i<32; i+=4) { draw(i, 0, 'kick', true); draw(i+2, 0, 'kick', true); }
+                [[0,2],[2,4],[4,4],[6,2],[8,4],[10,4],[12,5],[14,4],[16,3],[18,2],[20,1]].forEach(n => draw(n[0], n[1], 'trumpet'));
             } else if(type === 'kuznechik') {
                 state.steps = 32; state.tempo = 140;
                 for(let i=0; i<32; i+=4) {draw(i,0,'kick',true);     };
