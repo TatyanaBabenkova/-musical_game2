@@ -266,7 +266,7 @@
             }
             
             if (audioCtx.state === 'suspended') await audioCtx.resume();
-            / --- НАЧАЛО: ЗВУК ДЛЯ IPHONE (SAFARI) ---
+            // --- НАЧАЛО: ЗВУК ДЛЯ IPHONE (SAFARI) ---
             try {
                 // Создаем искусственный звук
                 const osc = audioCtx.createOscillator();
@@ -279,13 +279,7 @@
             } catch(e) { console.log('Audio unlock error:', e); }
             // --- КОНЕЦ ---
 
-            renderGame();
-            selectInstrument('guitar');
-            changeTempo(state.tempo);
-            document.getElementById('stepSelect').value = state.steps;
-            
-            checkTour(); 
-        }
+           }
             renderGame();
             selectInstrument('guitar');
             changeTempo(state.tempo);
