@@ -462,7 +462,7 @@
             } else if(type === 'gusi') {
                 state.steps = 32; state.tempo = 120;
                 [0,4,8,12,16,20,24,28].forEach(i => draw(i, 0, 'kick', true));
-                [[0,2],[2,2],[4,1],[6,2],[8,4],[10,4],[12,3],[14,4],[16,2],[18,2],[20,1],[22,2],[24,4],[26,4]].forEach(n => draw(n[0], n[1], 'guitar'));
+                [[0,3],[2,4],[4,5],[6,6],[8,2],[10,2],[16,3],[18,4],[20,5],[22,6],[24,2],[26,2]].forEach(n => draw(n[0], n[1], 'guitar'));
             } else if(type === 'pop') {
                 state.steps = 16; state.tempo = 120;
                 for(let i=0; i<16; i+=4) { draw(i, 0, 'kick', true); draw(i+2, 0, 'kick', true); }
