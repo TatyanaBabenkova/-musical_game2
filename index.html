@@ -135,7 +135,7 @@
             <button class="preset-btn" onclick="requestPresetLoad('train')">🚂 Паровоз</button>
             <button class="preset-btn" onclick="requestPresetLoad('chizhik')">🐦 Чижик</button>
             <button class="preset-btn" onclick="requestPresetLoad('gusi')">🦢 Гуси</button>
-            <button class="preset-btn" onclick="requestPresetLoad('pop')">🌟 Попса</button>
+            <button class="preset-btn" onclick="requestPresetLoad('pop')">🌟 Каравай </button>
         </div>
         <div class="top-controls" id="tour-controls">
             <button class="btn-icon" onclick="goHome()" title="На главную">🏠</button>
@@ -465,9 +465,9 @@
                 [0,4,8,12,16,20,24,28].forEach(i => draw(i, 0, 'kick', true));
                 [[0,3],[2,4],[4,5],[6,6],[8,2],[10,2],[16,3],[18,4],[20,5],[22,6],[24,2],[26,2]].forEach(n => draw(n[0], n[1], 'guitar'));
             } else if(type === 'pop') {
-                state.steps = 16; state.tempo = 120;
-                for(let i=0; i<16; i+=4) { draw(i, 0, 'kick', true); draw(i+2, 0, 'kick', true); }
-                [[0,6],[1,6],[4,3],[5,3],[8,6],[9,6],[12,3],[13,3]].forEach(n => draw(n[0], n[1], 'synth'));
+                state.steps = 32; state.tempo = 120;
+                for(let i=0; i<32; i+=4) { draw(i, 0, 'kick', true); draw(i+2, 0, 'kick', true); }
+                [[0,6],[2,6],[4,3],[6,3],[8,1],[10,1],[12,2],[14,2],[16,6],[18,6],[20,3],[22,3],[24,1],[26,1],[26,5]].forEach(n => draw(n[0], n[1], 'trumpet'));
             }
 
             hasUnsavedChanges = false; 
