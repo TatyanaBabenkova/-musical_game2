@@ -184,11 +184,23 @@
             {id:'fox', name:'Лисичка', desc:'Джаз и фанк!'}
         ];
         const INSTS = {
-            guitar: {id:'guitar', type:'mel', color:'#3b82f6', file:'guitar_base.wav'},
-            trumpet: {id:'trumpet', type:'mel', color:'#a855f7', file:'trumpet_base.wav'},
-            synth: {id:'synth', type:'mel', color:'#10b981', file:'synth_base.wav'},
-            kick: {id:'kick', type:'rhy', color:'#ef4444', file:'kick.wav'},
-            cymbals: {id:'cymbals', type:'rhy', color:'#eab308', file:'cymbal.wav'}
+       //     guitar: {id:'guitar', type:'mel', color:'#3b82f6', file:'guitar_base.wav'},
+       //     trumpet: {id:'trumpet', type:'mel', color:'#a855f7', file:'trumpet_base.wav'},
+       //     synth: {id:'synth', type:'mel', color:'#10b981', file:'synth_base.wav'},
+       //     kick: {id:'kick', type:'rhy', color:'#ef4444', file:'kick.wav'},
+       //     cymbals: {id:'cymbals', type:'rhy', color:'#eab308', file:'cymbal.wav'}
+
+
+    guitar:  {id:'guitar',  type:'mel', color:'#3b82f6', file:'guitar_base.wav',  trim: 1.00, decay: 0.32},
+    trumpet: {id:'trumpet', type:'mel', color:'#a855f7', file:'trumpet_base.wav', trim: 1.00, decay: 0.28},
+    synth:   {id:'synth',   type:'mel', color:'#10b981', file:'synth_base.wav',   trim: 0.70, decay: 0.25},
+    kick:    {id:'kick',    type:'rhy', color:'#ef4444', file:'kick.wav',         trim: 0.80, decay: 0.20},
+    cymbals: {id:'cymbals', type:'rhy', color:'#eab308', file:'cymbal.wav',       trim: 1.10, decay: 0.18}
+};
+
+
+
+            
         };
         const NOTES = ["СИ", "ЛЯ", "СОЛЬ", "ФА", "МИ", "РЕ", "ДО"];
        // const RATES = [1.888, 1.682, 1.498, 1.335, 1.26, 1.122, 1.0];
@@ -200,8 +212,8 @@
 
         let audioCtx = null;
         let masterCompressor = null;
-        let buffers = {}, activeNodes = {};
-
+       // let buffers = {}, activeNodes = {};
+        let buffers = {}, activeNodes = {}, normGains = {};
         function initLocal() {
             try {
                 const saved = localStorage.getItem('zveroband-save');
@@ -260,9 +272,34 @@
                 masterCompressor.release.setValueAtTime(0.25, audioCtx.currentTime);
                 masterCompressor.connect(audioCtx.destination);
                 
-                Object.keys(INSTS).forEach(k => {
-                    fetch(`sounds/${INSTS[k].file}`).then(r => r.arrayBuffer()).then(ab => audioCtx.decodeAudioData(ab, b => buffers[k] = b)).catch(() => {});
-                });
+           //     Object.keys(INSTS).forEach(k => {
+           //         fetch(`sounds/${INSTS[k].file}`).then(r => r.arrayBuffer()).then(ab => audioCtx.decodeAudioData(ab, b => buffers[k] = b)).catch(() => {});
+           //     });
+
+Object.keys(INSTS).forEach(k => {
+    fetch(`sounds/${INSTS[k].file}`)
+        .then(r => r.arrayBuffer())
+        .then(ab => new Promise((resolve, reject) => {
+            audioCtx.decodeAudioData(ab, resolve, reject);
+        }))
+        .then(buffer => {
+            buffers[k] = buffer;
+
+            let peak = 0;
+            for (let ch = 0; ch < buffer.numberOfChannels; ch++) {
+                const data = buffer.getChannelData(ch);
+                for (let i = 0; i < data.length; i++) {
+                    const v = Math.abs(data[i]);
+                    if (v > peak) peak = v;
+                }
+            }
+
+            normGains[k] = peak > 0 ? 0.7 / peak : 1;
+        })
+        .catch(err => console.log('Sound load error:', k, err));
+});
+
+                
             }
             
             if (audioCtx.state === 'suspended') await audioCtx.resume();
@@ -355,15 +392,47 @@
             saveLocal();
         }
 
-        function playSound(k, r) {
-            if(!audioCtx || !buffers[k]) return;
-            const t = audioCtx.currentTime;
-            if(activeNodes[k]) { try { activeNodes[k].stop(t+0.05); } catch(e){} }
-            const s = audioCtx.createBufferSource(); s.buffer = buffers[k]; s.playbackRate.value = r;
-            const g = audioCtx.createGain(); g.gain.setValueAtTime(0.5, t); g.gain.exponentialRampToValueAtTime(0.01, t + 0.5);
-            s.connect(g); g.connect(masterCompressor); s.start(); activeNodes[k] = s;
-        }
+      //  function playSound(k, r) {
+      //      if(!audioCtx || !buffers[k]) return;
+      //      const t = audioCtx.currentTime;
+      //      if(activeNodes[k]) { try { activeNodes[k].stop(t+0.05); } catch(e){} }
+      //      const s = audioCtx.createBufferSource(); s.buffer = buffers[k]; s.playbackRate.value = r;
+      //      const g = audioCtx.createGain(); g.gain.setValueAtTime(0.5, t); g.gain.exponentialRampToValueAtTime(0.01, t + 0.5);
+      //      s.connect(g); g.connect(masterCompressor); s.start(); activeNodes[k] = s;
+      //  }
 
+function playSound(k, r) {
+    if (!audioCtx || !buffers[k]) return;
+
+    const inst = INSTS[k];
+    const t = audioCtx.currentTime;
+
+    if (activeNodes[k]) {
+        try { activeNodes[k].stop(t + 0.02); } catch(e) {}
+    }
+
+    const s = audioCtx.createBufferSource();
+    s.buffer = buffers[k];
+   // s.playbackRate.value = r;
+s.playbackRate.value = (inst.baseRate ?? 1) * r;
+    const g = audioCtx.createGain();
+    const norm = normGains[k] ?? 1;
+    const trim = inst.trim ?? 1;
+    const decay = inst.decay ?? 0.30;
+
+    g.gain.setValueAtTime(0.18 * norm * trim, t);
+    g.gain.exponentialRampToValueAtTime(0.001, t + decay);
+
+    s.connect(g);
+    g.connect(masterCompressor);
+
+    s.start(t);
+    s.stop(t + decay + 0.05);
+
+    activeNodes[k] = s;
+}
+
+        
         function bounce(id) { const b = document.getElementById(`btn-${id}`); if(b) { b.classList.remove('bounce'); void b.offsetWidth; b.classList.add('bounce'); } }
 
         function togglePlay() {
