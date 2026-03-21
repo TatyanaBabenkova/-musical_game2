@@ -191,11 +191,11 @@
        //     cymbals: {id:'cymbals', type:'rhy', color:'#eab308', file:'cymbal.wav'}
 
 
-    guitar:  {id:'guitar',  type:'mel', color:'#3b82f6', file:'guitar_base.wav',  trim: 1.00, decay: 0.32},
-    trumpet: {id:'trumpet', type:'mel', color:'#a855f7', file:'trumpet_base.wav', trim: 1.00, decay: 0.28},
-    synth:   {id:'synth',   type:'mel', color:'#10b981', file:'synth_base.wav',   trim: 0.70, decay: 0.25},
-    kick:    {id:'kick',    type:'rhy', color:'#ef4444', file:'kick.wav',         trim: 0.80, decay: 0.20},
-    cymbals: {id:'cymbals', type:'rhy', color:'#eab308', file:'cymbal.wav',       trim: 1.10, decay: 0.18}
+    guitar:  {id:'guitar',  type:'mel', color:'#3b82f6', file:'guitar_base.wav',  trim: 1.00, hold: 0.02,  decay: 0.30},
+    trumpet: {id:'trumpet', type:'mel', color:'#a855f7', file:'trumpet_base.wav', trim: 1.00, hold: 0.10,  decay: 0.24},
+    synth:   {id:'synth',   type:'mel', color:'#10b981', file:'synth_base.wav',   trim: 0.85, hold: 0.02,  decay: 0.27},
+    kick:    {id:'kick',    type:'rhy', color:'#ef4444', file:'kick.wav',         trim: 0.78, hold: 0.005, decay: 0.18},
+    cymbals: {id:'cymbals', type:'rhy', color:'#eab308', file:'cymbal.wav',       trim: 1.00, hold: 0.01,  decay: 0.19}
 };
 
 
@@ -401,35 +401,47 @@ Object.keys(INSTS).forEach(k => {
       //      s.connect(g); g.connect(masterCompressor); s.start(); activeNodes[k] = s;
       //  }
 
+function scheduleSound(ctx, destination, k, r = 1, when = ctx.currentTime) {
+    if (!buffers[k]) return null;
+
+    const inst = INSTS[k];
+    const s = ctx.createBufferSource();
+    s.buffer = buffers[k];
+    s.playbackRate.value = (inst.baseRate ?? 1) * r;
+
+    const g = ctx.createGain();
+    const norm = normGains[k] ?? 1;
+    const trim = inst.trim ?? 1;
+    const hold = inst.hold ?? 0;
+    const decay = inst.decay ?? 0.30;
+    const startGain = 0.18 * norm * trim;
+
+    g.gain.setValueAtTime(startGain, when);
+    if (hold > 0) {
+        g.gain.setValueAtTime(startGain, when + hold);
+    }
+    g.gain.exponentialRampToValueAtTime(0.001, when + hold + decay);
+
+    s.connect(g);
+    g.connect(destination);
+
+    s.start(when);
+    s.stop(when + hold + decay + 0.05);
+
+    return s;
+}
+
 function playSound(k, r) {
     if (!audioCtx || !buffers[k]) return;
 
-    const inst = INSTS[k];
     const t = audioCtx.currentTime;
 
     if (activeNodes[k]) {
         try { activeNodes[k].stop(t + 0.02); } catch(e) {}
     }
 
-    const s = audioCtx.createBufferSource();
-    s.buffer = buffers[k];
-   // s.playbackRate.value = r;
-s.playbackRate.value = (inst.baseRate ?? 1) * r;
-    const g = audioCtx.createGain();
-    const norm = normGains[k] ?? 1;
-    const trim = inst.trim ?? 1;
-    const decay = inst.decay ?? 0.30;
-
-    g.gain.setValueAtTime(0.18 * norm * trim, t);
-    g.gain.exponentialRampToValueAtTime(0.001, t + decay);
-
-    s.connect(g);
-    g.connect(masterCompressor);
-
-    s.start(t);
-    s.stop(t + decay + 0.05);
-
-    activeNodes[k] = s;
+    const s = scheduleSound(audioCtx, masterCompressor, k, r, t);
+    if (s) activeNodes[k] = s;
 }
 
         
@@ -613,26 +625,46 @@ s.playbackRate.value = (inst.baseRate ?? 1) * r;
 
         async function exportWav() {
             if(!audioCtx) { alert("Сначала запустите игру!"); return; }
-            const dur = 10, sr = 44100;
-            const offline = new (window.OfflineAudioContext || window.webkitOfflineAudioContext)(2, sr * dur, sr);
+
+            const sr = 44100;
+            const stepDur = (60 / state.tempo) / 4;
+            const loopDur = state.steps * stepDur;
+            const dur = Math.max(10, loopDur + 1);
+            const offline = new (window.OfflineAudioContext || window.webkitOfflineAudioContext)(2, Math.ceil(sr * dur), sr);
+
             const offlineComp = offline.createDynamicsCompressor();
-            offlineComp.threshold.setValueAtTime(-10, 0);
+            offlineComp.threshold.setValueAtTime(-15, 0);
+            offlineComp.knee.setValueAtTime(30, 0);
+            offlineComp.ratio.setValueAtTime(12, 0);
+            offlineComp.attack.setValueAtTime(0.003, 0);
+            offlineComp.release.setValueAtTime(0.25, 0);
             offlineComp.connect(offline.destination);
 
-            const stepDur = (60 / state.tempo) / 4;
-            for(let sIdx=0; sIdx < state.steps * 4; sIdx++) {
-                const time = sIdx * stepDur; if(time >= dur) break;
+            for(let sIdx = 0; sIdx < state.steps * 4; sIdx++) {
+                const time = sIdx * stepDur;
+                if(time >= dur) break;
+
                 const cur = sIdx % state.steps;
-                if(state.grid[cur]) Object.keys(state.grid[cur]).forEach(r => {
-                    const id = state.grid[cur][r]; if(buffers[id]) { const src = offline.createBufferSource(); src.buffer = buffers[id]; src.playbackRate.value = RATES[r]; src.connect(offlineComp); src.start(time); }
-                });
+
+                if(state.grid[cur]) {
+                    Object.keys(state.grid[cur]).forEach(r => {
+                        const id = state.grid[cur][r];
+                        scheduleSound(offline, offlineComp, id, RATES[r], time);
+                    });
+                }
+
                 if(state.rhy[cur]) {
-                    const id = state.rhy[cur]; if(buffers[id]) { const src = offline.createBufferSource(); src.buffer = buffers[id]; src.playbackRate.value = 1; src.connect(offlineComp); src.start(time); }
+                    const id = state.rhy[cur];
+                    scheduleSound(offline, offlineComp, id, 1, time);
                 }
             }
+
             const rendered = await offline.startRendering();
             const blob = audioBufferToWav(rendered);
-            const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = 'ZveroBand.wav'; link.click();
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'ZveroBand.wav';
+            link.click();
         }
 
         function audioBufferToWav(buffer) {
