@@ -40,7 +40,8 @@
         /* ЭКРАН 2 */
         #screen-game { display: none; flex-direction: column; height: 100%; padding: 10px; }
         .presets-carousel { display: flex; overflow-x: auto; gap: 8px; padding-bottom: 8px; flex: 0 0 auto; scrollbar-width: none; border-radius: 20px; }
-        .preset-btn { flex: 0 0 auto; padding: 10px 16px; border-radius: 20px; background: var(--card-bg); border: 2px solid #e2e8f0; font-weight: 800; font-size: 12px; cursor: pointer; }
+        .preset-btn { flex: 0 0 auto; padding: 10px 16px; border-radius: 20px; background: var(--card-bg); border: 2px solid #e2e8f0; font-weight: 800; font-size: 12px; cursor: pointer; transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s; }
+        .preset-btn.active-preset { border-color: #94a3b8; box-shadow: 0 0 0 3px rgba(148,163,184,0.18); }
         .top-controls { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 8px; flex-shrink: 0; border-radius: 18px; }
         .btn-play { background: #10b981; color: white; border: none; flex: 1; border-radius: 18px; font-weight: 900; font-size: 16px; height: 46px; cursor: pointer; transition: background 0.2s;}
         .btn-play.playing { background: #ef4444; }
@@ -126,16 +127,16 @@
 
     <div id="screen-game">
         <div class="presets-carousel" id="presets-container">
-            <button class="preset-btn" onclick="requestPresetLoad('yolochka')">🌈 Радуга</button>
-            <button class="preset-btn" onclick="requestPresetLoad('kuznechik')">🦗 Кузнечик</button>
-            <button class="preset-btn" onclick="requestPresetLoad('twinkle')">⭐ Звездочка</button>
-           <button class="preset-btn" onclick="requestPresetLoad('dance')">✨ Искорки</button>
-           <button class="preset-btn" onclick="requestPresetLoad('rock')">🎠 Карусель</button>
-            <button class="preset-btn" onclick="requestPresetLoad('ufo')">🛸 НЛО</button>
-            <button class="preset-btn" onclick="requestPresetLoad('train')">🚂 Паровоз</button>
-            <button class="preset-btn" onclick="requestPresetLoad('chizhik')">🐦 Чижик</button>
-            <button class="preset-btn" onclick="requestPresetLoad('gusi')">🦢 Гуси</button>
-            <button class="preset-btn" onclick="requestPresetLoad('pop')">🌟 Каравай </button>
+            <button class="preset-btn" data-preset="yolochka" onclick="requestPresetLoad('yolochka')">🫧 Переливы</button>
+            <button class="preset-btn" data-preset="kuznechik" onclick="requestPresetLoad('kuznechik')">🦗 Кузнечик</button>
+            <button class="preset-btn" data-preset="twinkle" onclick="requestPresetLoad('twinkle')">⭐ Звездочка</button>
+            <button class="preset-btn" data-preset="dance" onclick="requestPresetLoad('dance')">✨ Искорки</button>
+            <button class="preset-btn" data-preset="rock" onclick="requestPresetLoad('rock')">🎠 Карусель</button>
+            <button class="preset-btn" data-preset="ufo" onclick="requestPresetLoad('ufo')">🛸 НЛО</button>
+            <button class="preset-btn" data-preset="train" onclick="requestPresetLoad('train')">🚂 Паровоз</button>
+            <button class="preset-btn" data-preset="chizhik" onclick="requestPresetLoad('chizhik')">🐦 Чижик</button>
+            <button class="preset-btn" data-preset="gusi" onclick="requestPresetLoad('gusi')">🦢 Гуси</button>
+            <button class="preset-btn" data-preset="pop" onclick="requestPresetLoad('pop')">🌟 Каравай</button>
         </div>
         <div class="top-controls" id="tour-controls">
             <button class="btn-icon" onclick="goHome()" title="На главную">🏠</button>
@@ -206,7 +207,7 @@
        // const RATES = [1.888, 1.682, 1.498, 1.335, 1.26, 1.122, 1.0];
         const RATES = [1.8877, 1.6818, 1.4983, 1.3348, 1.2599, 1.1225, 1.0];
         
-        let state = { hero: 0, inst: 'guitar', grid: {}, rhy: {}, playing: false, step: 0, tempo: 120, steps: 16 };
+        let state = { hero: 0, inst: 'guitar', grid: {}, rhy: {}, playing: false, step: 0, tempo: 120, steps: 16, currentPreset: '' };
         let hasUnsavedChanges = false;
         let confirmAction = null; // Для хранения действия в модальном окне
 
@@ -224,6 +225,7 @@
                     if(p.rhy) state.rhy = p.rhy;
                     if(p.steps) state.steps = p.steps;
                     if(p.tempo) state.tempo = p.tempo;
+                    if(p.currentPreset !== undefined) state.currentPreset = p.currentPreset;
                     if(Object.keys(state.grid).length > 0 || Object.keys(state.rhy).length > 0) hasUnsavedChanges = true;
                 }
             } catch(e) {}
@@ -233,7 +235,7 @@
         function saveLocal() {
             try {
                 localStorage.setItem('zveroband-save', JSON.stringify({
-                    grid: state.grid, rhy: state.rhy, steps: state.steps, tempo: state.tempo, hero: state.hero
+                    grid: state.grid, rhy: state.rhy, steps: state.steps, tempo: state.tempo, hero: state.hero, currentPreset: state.currentPreset
                 }));
             } catch(e) {}
         }
@@ -353,6 +355,7 @@ Object.keys(INSTS).forEach(k => {
             }
             rhy.appendChild(rRow);
             renderPalette();
+            updatePresetButtons();
         }
 
         function renderPalette() {
@@ -366,6 +369,13 @@ Object.keys(INSTS).forEach(k => {
                 const iconMap = {guitar:'guitar', trumpet:'trumpet', synth:'synth', kick:'drum', cymbals:'cymbals'};
                 btn.innerHTML = `<img class="inst-img" src="img/${h.id}_${iconMap[k]}.png">`;
                 p.appendChild(btn);
+            });
+        }
+
+        function updatePresetButtons() {
+            document.querySelectorAll('.preset-btn').forEach(btn => {
+                btn.classList.remove('active-preset');
+                if(btn.dataset.preset === state.currentPreset) btn.classList.add('active-preset');
             });
         }
 
@@ -388,7 +398,9 @@ Object.keys(INSTS).forEach(k => {
                 if(state.rhy[c]) { delete state.rhy[c]; document.getElementById(`r-${c}`).style.background = ''; }
                 else { state.rhy[c] = id; document.getElementById(`r-${c}`).style.background = INSTS[id].color; playSound(id, 1); bounce(id); }
             }
+            state.currentPreset = '';
             hasUnsavedChanges = true;
+            updatePresetButtons();
             saveLocal();
         }
 
@@ -504,7 +516,7 @@ function playSound(k, r) {
         }
 
         function clearGrid() { 
-            state.grid = {}; state.rhy = {}; 
+            state.grid = {}; state.rhy = {}; state.currentPreset = '';
             hasUnsavedChanges = false; saveLocal(); renderGame(); 
         }
 
@@ -517,32 +529,15 @@ function playSound(k, r) {
         }
 
         function loadPreset(type) {
-            state.grid = {}; state.rhy = {};
+            state.grid = {}; state.rhy = {}; state.currentPreset = type;
             const draw = (c, r, inst, isRhy=false) => { if(!isRhy) { state.grid[c] = state.grid[c] || {}; state.grid[c][r] = inst; } else { state.rhy[c] = inst; } };
             
-           if(type === 'yolochka') {
-    state.steps = 32; state.tempo = 116;
-
-    for(let i=0; i<32; i+=4) {
-        draw(i, 0, 'kick', true);
-        draw(i+1, 0, 'cymbals', true);
-        draw(i+2, 0, 'kick', true);
-        draw(i+3, 0, 'cymbals', true);
-    }
-
-    [[0,6],[2,4],[4,2],[6,4],[8,5],[10,3],[12,1],[14,3],
-     [16,6],[18,4],[20,2],[22,4],[24,5],[26,3],[28,2],[30,1]]
-        .forEach(n => draw(n[0], n[1], 'synth'));
-
-    [[1,4],[5,2],[9,3],[13,1],[17,4],[21,2],[25,3],[29,1]]
-        .forEach(n => draw(n[0], n[1], 'guitar'));
-
-    [[7,2],[15,0],[23,2],[31,1]]
-        .forEach(n => draw(n[0], n[1], 'trumpet')); 
-            
-        }     
-            
-            else if(type === 'kuznechik') {
+            if(type === 'yolochka') {
+                state.steps = 32; state.tempo = 114;
+                for(let i=0; i<32; i+=4) { draw(i, 0, 'kick', true); draw(i+2, 0, 'cymbals', true); }
+                [[0,6],[2,5],[4,4],[6,3],[8,4],[10,5],[12,6],[14,4],[16,5],[18,3],[20,2],[22,3],[24,4],[26,5],[28,3],[30,1]].forEach(n => draw(n[0], n[1], 'synth'));
+                [[1,4],[5,2],[9,3],[13,2],[17,4],[21,1],[25,3],[29,2]].forEach(n => draw(n[0], n[1], 'guitar'));
+            } else if(type === 'kuznechik') {
                 state.steps = 32; state.tempo = 140;
                 for(let i=0; i<32; i+=4) {draw(i,0,'kick',true);     };
                 [[0,1],[2,4],[4,1],[6,4],[8,1],[10,2],[12,2],[16,2],[18,4],[20,2],[22,4],[24,2],[26,1],[28,1]].forEach(n=>draw(n[0],n[1],'synth'));
@@ -555,65 +550,20 @@ function playSound(k, r) {
                 draw(0, 0, 'kick', true); draw(8, 0, 'kick', true);
                 [[0,6],[1,5],[2,4],[3,3],[4,2],[8,6],[9,5],[10,4],[11,3],[12,2]].forEach(n => draw(n[0], n[1], 'synth'));
                 [[0,0],[2,0],[4,0],[8,1],[10,1],[12,1]].forEach(n => draw(n[0], n[1], 'trumpet'));
-           } else if(type === 'train') {
-    state.steps = 32; state.tempo = 132;
-
-    for(let i=0; i<32; i+=4) {
-        draw(i, 0, 'kick', true);
-        draw(i+1, 0, 'cymbals', true);
-        draw(i+2, 0, 'kick', true);
-        draw(i+3, 0, 'cymbals', true);
-    }
-
-    [[0,6],[2,6],[4,5],[6,5],[8,6],[10,6],[12,5],[14,5],
-     [16,6],[18,6],[20,5],[22,5],[24,4],[26,4],[28,5],[30,5]]
-        .forEach(n => draw(n[0], n[1], 'guitar'));
-
-    [[1,4],[5,4],[9,4],[13,4],[17,3],[21,3],[25,2],[29,2]]
-        .forEach(n => draw(n[0], n[1], 'synth'));
-
-    [[0,1],[2,0],[14,1],[16,0],[28,1],[30,0]]
-        .forEach(n => draw(n[0], n[1], 'trumpet'));
-        
-          
-} else if(type === 'rock') {
-    state.steps = 32; state.tempo = 112;
-
-    for(let i=0; i<32; i+=4) {
-        draw(i, 0, 'kick', true);
-        draw(i+3, 0, 'cymbals', true);
-    }
-
-    [[0,6],[2,5],[4,4],[6,3],[8,2],[10,3],[12,4],[14,5],
-     [16,6],[18,5],[20,4],[22,3],[24,2],[26,3],[28,4],[30,5]]
-        .forEach(n => draw(n[0], n[1], 'guitar'));
-
-    [[1,4],[5,2],[9,1],[13,2],[17,4],[21,2],[25,1],[29,2]]
-        .forEach(n => draw(n[0], n[1], 'synth'));
-
-    [[7,1],[15,0],[23,1],[31,0]]
-        .forEach(n => draw(n[0], n[1], 'trumpet'));
-            
-               
-} else if(type === 'dance') {
-    state.steps = 32; state.tempo = 132;
-
-    for(let i=0; i<32; i+=4) {
-        draw(i, 0, 'kick', true);
-        draw(i+2, 0, 'cymbals', true);
-    }
-
-    [[0,6],[2,4],[4,5],[6,3],[8,4],[10,2],[12,5],[14,3],
-     [16,6],[18,4],[20,5],[22,3],[24,4],[26,2],[28,5],[30,3]]
-        .forEach(n => draw(n[0], n[1], 'synth'));
-
-    [[1,2],[5,1],[9,2],[13,1],[17,2],[21,1],[25,2],[29,1]]
-        .forEach(n => draw(n[0], n[1], 'guitar'));
-
-    [[7,0],[15,0],[23,1],[31,0]]
-        .forEach(n => draw(n[0], n[1], 'trumpet'));
-            
-                   
+            } else if(type === 'train') {
+                state.steps = 16; state.tempo = 120;
+                for(let i=0; i<16; i+=2) { draw(i, 0, 'kick', true); draw(i+1, 0, 'kick', true); }
+                draw(0, 2, 'trumpet'); draw(1, 2, 'trumpet'); draw(8, 3, 'trumpet'); draw(9, 3, 'trumpet');
+            } else if(type === 'rock') {
+                state.steps = 32; state.tempo = 118;
+                for(let i=0; i<32; i+=4) { draw(i, 0, 'kick', true); draw(i+3, 0, 'cymbals', true); }
+                [[0,6],[2,5],[4,4],[6,5],[8,6],[10,4],[12,3],[14,4],[16,5],[18,3],[20,2],[22,3],[24,4],[26,5],[28,4],[30,2]].forEach(n => draw(n[0], n[1], 'guitar'));
+                [[1,3],[5,2],[9,1],[13,2],[17,3],[21,2],[25,1],[29,2]].forEach(n => draw(n[0], n[1], 'synth'));
+            } else if(type === 'dance') {
+                state.steps = 32; state.tempo = 132;
+                for(let i=0; i<32; i+=4) { draw(i, 0, 'kick', true); draw(i+2, 0, 'cymbals', true); }
+                [[0,6],[2,4],[4,5],[6,3],[8,4],[10,2],[12,5],[14,3],[16,6],[18,4],[20,5],[22,3],[24,4],[26,2],[28,5],[30,3]].forEach(n => draw(n[0], n[1], 'synth'));
+                [[1,2],[5,1],[9,2],[13,1],[17,2],[21,1],[25,2],[29,1]].forEach(n => draw(n[0], n[1], 'guitar'));
             } else if(type === 'chizhik') {
                 state.steps = 32; state.tempo = 110;
                 for(let i=0; i<32; i+=4) { draw(i, 0, 'cymbals', true); draw(i+2, 0, 'kick', true);}
