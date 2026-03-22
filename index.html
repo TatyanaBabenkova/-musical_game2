@@ -575,7 +575,7 @@ function playSound(k, r) {
             } else if(type === 'pop') {
                 state.steps = 32; state.tempo = 105;
                 for(let i=0; i<32; i+=4) { draw(i, 0, 'kick', true); draw(i+4, 0, 'kick', true); }
-                [[0,6],[2,6],[4,3],[6,3],[8,1],[10,1],[12,2],[14,2],[16,6],[18,6],[20,3],[22,3],[24,1],[26,1],[28,5]].forEach(n => draw(n[0], n[1], 'trumpet'));
+                [[0,6],[2,6],[4,3],[6,3],[8,1],[10,1],[12,2],[14,2],[16,6],[18,6],[20,3],[22,3],[24,1],[26,1],[28,2]].forEach(n => draw(n[0], n[1], 'trumpet'));
             }
 
             hasUnsavedChanges = false; 
